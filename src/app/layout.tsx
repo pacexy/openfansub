@@ -17,8 +17,8 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - [title]',
-    default: '[title]', // a default is required when creating a template
+    template: '%s - OpenFansub',
+    default: 'OpenFansub', // a default is required when creating a template
   },
   description: '[description]',
 }

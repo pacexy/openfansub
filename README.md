@@ -1,4 +1,4 @@
-# Monorepo: [title]
+# Monorepo: OpenFansub
 
 [description]
 
@@ -9,8 +9,8 @@ Replace the following placeholders:
 > [!NOTE]
 > We use `[]` rather than `{}` to avoid conflict with jsx
 
-- `[name]`
-- `[title]`
+- `openfansub`
+- `OpenFansub`
 - `[description]`
 
 ## License
