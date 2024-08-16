@@ -17,6 +17,8 @@ export interface FansubConfig {
   }
 }
 
+// TODO: impl defineConfig
+
 const fansubFiles = await readdir('./src/fansubs')
 export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
 export const fansubConfigs: FansubConfig[] = await Promise.all(
