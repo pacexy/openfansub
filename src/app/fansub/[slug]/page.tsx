@@ -43,7 +43,7 @@ export function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return fansubs.map((slug) => ({ params: { slug } }))
+  return fansubs.map((slug) => ({ slug }))
 }
 
 export default function FansubPage({ params }: { params: { slug: string } }) {
