@@ -17,21 +17,15 @@ const icons = {
 
 function formatLink(key: keyof FansubConfig['links'], value: string) {
   const url = new URL(value)
-  if (key === 'repository') {
-    return url.pathname.replace('/', '')
-  }
-  if (key === 'website') {
-    return url.host
-  }
-  if (key === 'telegram') {
-    return `@${url.pathname.replace('/', '')}`
-  }
-  if (key === 'qq') {
-    return new URLSearchParams(url.search).get('group_code')
-  }
-  if (key === 'bilibili') {
-    return url.pathname.replace('/', '')
-  }
+  const path = url.pathname.replace('/', '')
+
+  return {
+    repository: path,
+    website: url.host,
+    telegram: `@${path}`,
+    qq: new URLSearchParams(url.search).get('group_code'),
+    bilibili: path,
+  }[key]
 }
 
 export async function generateStaticParams() {
