@@ -5,9 +5,9 @@ export interface FansubConfig {
   name: string
   description?: string
   logo: string
-  repo: string
-  website?: string
-  social: {
+  links: {
+    repository?: string
+    website?: string
     telegram?: string
     qq?: string
     bilibili?: string

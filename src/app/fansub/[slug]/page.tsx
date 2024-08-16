@@ -2,13 +2,16 @@ import { Button } from '~/components/ui/button'
 import { fansubConfigs, fansubs } from '~/lib/fansub'
 import Link from 'next/link'
 import { createElement } from 'react'
-import { FaQq, FaTelegram } from 'react-icons/fa'
+import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
+import { FaBilibili } from 'react-icons/fa6'
 import { LuLink } from 'react-icons/lu'
 
 const icons = {
-  telegram: FaTelegram,
+  repository: FaGithub,
+  website: LuLink,
+  telegram: FaTelegramPlane,
   qq: FaQq,
-  bilibili: LuLink,
+  bilibili: FaBilibili,
 }
 
 export async function generateStaticParams() {
@@ -36,15 +39,20 @@ export default async function FansubPage({
           />
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
           <p className="mb-4 text-muted-foreground">{config.description}</p>
-          <ul className="space-y-4">
-            {Object.entries(config.social).map(([key, value]) => (
+          <ul className="space-y-3">
+            {Object.entries(config.links).map(([key, value]) => (
               <li key={key}>
-                <div className="flex items-center">
+                <div className="flex items-center text-muted-foreground">
                   {createElement(icons[key as keyof typeof icons], {
                     size: 20,
-                    className: 'mr-2 text-accent-foreground',
+                    className: 'mr-2',
                   })}
-                  <a href={value} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={value}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-secondary-foreground"
+                  >
                     {key}
                   </a>
                 </div>
