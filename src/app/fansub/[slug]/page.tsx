@@ -26,18 +26,16 @@ export default async function FansubPage({
       <Link href="/" className="mb-4 inline-block">
         <Button variant="outline">← Back to Home</Button>
       </Link>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-16 md:grid-cols-3">
         {/* Left column: Fansub Information */}
         <div className="md:col-span-1">
           <img
             src={config.logo}
             alt={config.name}
-            className="mx-auto mb-4 h-32 w-32 rounded-full"
+            className="mb-4 w-full rounded-full"
           />
-          <h1 className="mb-2 text-center text-3xl font-bold">{config.name}</h1>
-          <p className="mb-4 text-center text-muted-foreground">
-            {config.description}
-          </p>
+          <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
+          <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-4">
             {Object.entries(config.social).map(([key, value]) => (
               <li key={key}>
