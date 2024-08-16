@@ -7,10 +7,13 @@ export interface FansubConfig {
   logo: string
   repo: string
   website?: string
-  social?: {
+  social: {
     telegram?: string
     qq?: string
     bilibili?: string
+  }
+  subtitles: {
+    [key: string]: string
   }
 }
 
