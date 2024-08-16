@@ -4,5 +4,9 @@ node_modules
 .next
 next-env.d.ts
 
+# next.js static export
+# https://nextjs.org/docs/app/building-your-application/deploying/static-exports
+out
+
 # vercel
 .vercel
