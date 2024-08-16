@@ -1,6 +1,7 @@
 import { Button } from '~/components/ui/button'
 import { fansubConfigs, fansubs, type FansubConfig } from '~/lib/fansub'
 import { keys } from '~/lib/utils'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createElement } from 'react'
 import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
@@ -26,6 +27,19 @@ function formatLink(key: keyof FansubConfig['links'], value: string) {
     qq: new URLSearchParams(url.search).get('group_code'),
     bilibili: path,
   }[key]
+}
+
+export function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Metadata {
+  const config = fansubConfigs.find((c) => c.slug === params.slug)!
+  return {
+    title: config.name,
+    description: config.description,
+    icons: config.logo,
+  }
 }
 
 export async function generateStaticParams() {

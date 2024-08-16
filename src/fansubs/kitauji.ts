@@ -2,7 +2,7 @@ import type { FansubConfig } from '~/lib/fansub'
 
 const config = {
   slug: 'kitauji',
-  name: '北宇治',
+  name: '北宇治字幕组',
   description: '我们是北宇治字幕组，是由一群喜欢动画的人们组成的非盈利字幕组。',
   logo: 'https://avatars.githubusercontent.com/u/121954830?s=200&v=4',
   links: {
