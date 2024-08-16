@@ -56,12 +56,10 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
       <div className="mt-4 grid grid-cols-1 gap-16 md:grid-cols-3">
         {/* left */}
         <div className="md:col-span-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={config.logo}
-            alt={config.name}
-            className="mb-4 w-full rounded-full"
-          />
+          <div className="mb-4 aspect-square w-full rounded-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={config.logo} alt={config.name} className="w-full" />
+          </div>
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
           <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-3">
