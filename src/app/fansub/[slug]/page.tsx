@@ -1,11 +1,7 @@
-import { readdir } from 'fs/promises'
+import { fansubConfigs, fansubs } from '~/lib/fansub'
 
 export async function generateStaticParams() {
-  const fansubs = await readdir('./src/fansubs')
-
-  return fansubs.map((fansub) => ({
-    slug: fansub.replace(/\.ts$/, ''),
-  }))
+  return fansubs.map((slug) => ({ params: { slug } }))
 }
 
 export default async function FansubPage({
@@ -13,7 +9,7 @@ export default async function FansubPage({
 }: {
   params: { slug: string }
 }) {
-  const { default: config } = await import(`../../../fansubs/${params.slug}`)
+  const config = fansubConfigs.find((c) => c.slug === params.slug)!
   return (
     <div>
       <h1>{config.name}</h1>
