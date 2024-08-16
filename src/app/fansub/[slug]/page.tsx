@@ -1,5 +1,6 @@
 import { Button } from '~/components/ui/button'
-import { fansubConfigs, fansubs } from '~/lib/fansub'
+import { fansubConfigs, fansubs, type FansubConfig } from '~/lib/fansub'
+import { keys } from '~/lib/utils'
 import Link from 'next/link'
 import { createElement } from 'react'
 import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
@@ -12,6 +13,25 @@ const icons = {
   telegram: FaTelegramPlane,
   qq: FaQq,
   bilibili: FaBilibili,
+}
+
+function formatLink(key: keyof FansubConfig['links'], value: string) {
+  const url = new URL(value)
+  if (key === 'repository') {
+    return url.pathname.replace('/', '')
+  }
+  if (key === 'website') {
+    return url.host
+  }
+  if (key === 'telegram') {
+    return `@${url.pathname.replace('/', '')}`
+  }
+  if (key === 'qq') {
+    return new URLSearchParams(url.search).get('group_code')
+  }
+  if (key === 'bilibili') {
+    return url.pathname.replace('/', '')
+  }
 }
 
 export async function generateStaticParams() {
@@ -40,7 +60,7 @@ export default async function FansubPage({
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
           <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-3">
-            {Object.entries(config.links).map(([key, value]) => (
+            {keys(config.links).map((key) => (
               <li key={key}>
                 <div className="flex items-center text-muted-foreground">
                   {createElement(icons[key as keyof typeof icons], {
@@ -48,12 +68,12 @@ export default async function FansubPage({
                     className: 'mr-2',
                   })}
                   <a
-                    href={value}
+                    href={config.links[key]}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-secondary-foreground"
+                    className="text-sm text-secondary-foreground"
                   >
-                    {key}
+                    {formatLink(key, config.links[key]!)}
                   </a>
                 </div>
               </li>
