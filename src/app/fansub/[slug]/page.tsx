@@ -38,11 +38,7 @@ export async function generateStaticParams() {
   return fansubs.map((slug) => ({ params: { slug } }))
 }
 
-export default async function FansubPage({
-  params,
-}: {
-  params: { slug: string }
-}) {
+export default function FansubPage({ params }: { params: { slug: string } }) {
   const config = fansubConfigs.find((c) => c.slug === params.slug)!
   return (
     <div className="container mx-auto px-4 py-8">
@@ -50,8 +46,9 @@ export default async function FansubPage({
         <Button variant="outline">← Back to Home</Button>
       </Link>
       <div className="mt-4 grid grid-cols-1 gap-16 md:grid-cols-3">
-        {/* Left column: Fansub Information */}
+        {/* left */}
         <div className="md:col-span-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={config.logo}
             alt={config.name}
@@ -81,7 +78,7 @@ export default async function FansubPage({
           </ul>
         </div>
 
-        {/* Right column: Subtitles */}
+        {/* right */}
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="space-y-4">
