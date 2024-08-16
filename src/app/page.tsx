@@ -1,5 +1,5 @@
 import { readdir } from 'fs/promises'
-import type { FansubConfig } from '~/type'
+import type { FansubConfig } from '~/lib/fansub'
 import Link from 'next/link'
 
 export default async function Home() {

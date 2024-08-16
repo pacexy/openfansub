@@ -1,4 +1,4 @@
-import type { FansubConfig } from '~/type'
+import type { FansubConfig } from '~/lib/fansub'
 
 const config = {
   slug: 'kitauji',
