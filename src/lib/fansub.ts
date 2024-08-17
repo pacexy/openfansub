@@ -1,5 +1,5 @@
 import { readdir } from 'node:fs/promises'
-import { fetchAnimeFiles, type Anime } from './github'
+import { fetchAnimeFiles, type IAnime } from './github'
 
 export interface FansubConfig {
   slug: string
@@ -13,7 +13,7 @@ export interface FansubConfig {
     qq?: string
     bilibili?: string
   }
-  animes?: Anime[]
+  animes?: IAnime[]
 }
 
 // TODO: impl defineConfig

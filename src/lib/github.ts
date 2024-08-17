@@ -1,13 +1,13 @@
 const supportedSubtitleExts = ['.srt', '.ass']
 
-export interface Anime {
+export interface IAnime {
   name: string
   path: string
   subtitles: string[]
 }
 
-export async function fetchAnimeFiles(repoUrl: string): Promise<Anime[]> {
-  const animes: Map<string, Anime> = new Map()
+export async function fetchAnimeFiles(repoUrl: string): Promise<IAnime[]> {
+  const animes: Map<string, IAnime> = new Map()
   const [owner, repo] = repoUrl.replace('https://github.com/', '').split('/')
 
   const url = `https://ungh.cc/repos/${owner}/${repo}/files/main`

@@ -1,5 +1,6 @@
 import { Button } from '~/components/ui/button'
 import { fansubConfigs, fansubs, type FansubConfig } from '~/lib/fansub'
+import type { IAnime } from '~/lib/github'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -89,23 +90,37 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="space-y-4">
             {(config.animes ?? []).map((anime) => (
-              <li key={anime.name} className="border-b pb-2">
-                <a
-                  href={`${config.links.repository}/tree/main/${anime.path}`}
-                  className="text-blue-600 hover:text-blue-800"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <h3 className="text-lg font-semibold">{anime.path}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {anime.subtitles.length} subtitles
-                  </p>
-                </a>
-              </li>
+              <Anime
+                key={anime.path}
+                repository={config.links.repository}
+                anime={anime}
+              />
             ))}
           </ul>
         </div>
       </div>
     </div>
+  )
+}
+
+function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
+  const dir = `${repository}/tree/main/${anime.path}`
+  return (
+    <li className="border-b pb-2">
+      <a
+        href={dir}
+        className="text-blue-600 hover:text-blue-800"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h3 className="text-lg font-semibold">{anime.path}</h3>
+      </a>
+      <p
+        className="text-sm text-muted-foreground"
+        title={anime.subtitles.join('\n')}
+      >
+        {anime.subtitles.length} subtitles
+      </p>
+    </li>
   )
 }
