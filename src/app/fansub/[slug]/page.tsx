@@ -13,10 +13,12 @@ import { createElement } from 'react'
 import type { IconType } from 'react-icons'
 import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili } from 'react-icons/fa6'
+import { GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
 
 const icons = {
   website: LuLink,
+  project: GoTable,
   telegram: FaTelegramPlane,
   qq: FaQq,
   bilibili: FaBilibili,
@@ -28,6 +30,7 @@ function formatLink(platform: keyof FansubConfig['links'], value: string) {
 
   return {
     website: url.host,
+    project: 'Project',
     telegram: `@${path}`,
     qq: new URLSearchParams(url.search).get('group_code') ?? '', // TODO:
     bilibili: path,

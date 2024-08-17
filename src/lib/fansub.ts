@@ -19,6 +19,7 @@ export interface FansubConfig {
   }
   links: {
     website?: string
+    project?: string
     telegram?: string
     qq?: string
     bilibili?: string
