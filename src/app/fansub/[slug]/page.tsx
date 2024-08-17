@@ -71,7 +71,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
             {keys(config.links).map((key) => (
               <li key={key}>
                 <div className="flex items-center text-muted-foreground">
-                  {createElement(icons[key as keyof typeof icons], {
+                  {createElement(icons[key], {
                     size: 20,
                     className: 'mr-2',
                   })}
