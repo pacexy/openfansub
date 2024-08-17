@@ -5,33 +5,36 @@ import {
   type FansubConfig,
   type IAnime,
 } from '~/lib/fansub'
+import type { IRepo } from '~/lib/github'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createElement } from 'react'
+import type { IconType } from 'react-icons'
 import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili } from 'react-icons/fa6'
+import { GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
 
 const icons = {
-  repository: FaGithub,
   website: LuLink,
+  project: GoTable,
   telegram: FaTelegramPlane,
   qq: FaQq,
   bilibili: FaBilibili,
 }
 
-function formatLink(key: keyof FansubConfig['links'], value: string) {
+function formatLink(platform: keyof FansubConfig['links'], value: string) {
   const url = new URL(value)
   const path = url.pathname.replace('/', '')
 
   return {
-    repository: path,
     website: url.host,
+    project: 'Project',
     telegram: `@${path}`,
-    qq: new URLSearchParams(url.search).get('group_code'),
+    qq: new URLSearchParams(url.search).get('group_code') ?? '', // TODO:
     bilibili: path,
-  }[key]
+  }[platform]
 }
 
 export function generateMetadata({
@@ -43,7 +46,7 @@ export function generateMetadata({
   return {
     title: config.name,
     description: config.description,
-    icons: config.logo,
+    icons: config.avatar,
   }
 }
 
@@ -61,30 +64,27 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
       <div className="mt-4 grid grid-cols-1 gap-16 md:grid-cols-3">
         {/* left */}
         <div className="md:col-span-1">
-          <div className="mb-4 aspect-square w-full rounded-full">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={config.logo} alt={config.name} className="w-full" />
+          <div className="mb-4 aspect-square w-full rounded-full bg-muted">
+            {config.avatar && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={config.avatar} alt={config.name} className="w-full" />
+            )}
           </div>
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
           <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-3">
+            <SocialLink
+              icon={FaGithub}
+              url={`https://github.com/${config.repo.owner}/${config.repo.name}`}
+              label={`${config.repo.owner}/${config.repo.name}`}
+            />
             {keys(config.links).map((key) => (
-              <li key={key}>
-                <div className="flex items-center text-muted-foreground">
-                  {createElement(icons[key], {
-                    size: 20,
-                    className: 'mr-2',
-                  })}
-                  <a
-                    href={config.links[key]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-secondary-foreground"
-                  >
-                    {formatLink(key, config.links[key]!)}
-                  </a>
-                </div>
-              </li>
+              <SocialLink
+                key={key}
+                icon={icons[key]}
+                url={config.links[key]!}
+                label={formatLink(key, config.links[key]!)}
+              />
             ))}
           </ul>
         </div>
@@ -94,11 +94,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="space-y-4">
             {(config.animes ?? []).map((anime) => (
-              <Anime
-                key={anime.path}
-                repository={config.links.repository}
-                anime={anime}
-              />
+              <Anime key={anime.path} repo={config.repo} anime={anime} />
             ))}
           </ul>
         </div>
@@ -107,7 +103,36 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
   )
 }
 
-function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
+function SocialLink({
+  icon,
+  url,
+  label,
+}: {
+  icon: IconType
+  url: string
+  label: string
+}) {
+  return (
+    <li>
+      <div className="flex items-center text-muted-foreground">
+        {createElement(icon, {
+          size: 20,
+          className: 'mr-2',
+        })}
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-secondary-foreground"
+        >
+          {label}
+        </a>
+      </div>
+    </li>
+  )
+}
+
+function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
   const parts = anime.path.split('/')
   const name = parts.pop()
   const parent = parts.join('/')
@@ -115,7 +140,7 @@ function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
   return (
     <li className="border-b pb-2">
       <a
-        href={`${repository}/tree/main/${anime.path}`}
+        href={`https://github.com/${repo.name}/tree/${repo.branch}/${anime.path}`}
         className="text-blue-600 hover:text-blue-800"
         target="_blank"
         rel="noopener noreferrer"

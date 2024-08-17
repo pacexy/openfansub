@@ -11,10 +11,15 @@ export interface FansubConfig {
   slug: string
   name: string
   description?: string
-  logo: string
+  avatar?: string
+  repo: {
+    owner: string
+    name: string
+    branch: string
+  }
   links: {
-    repository: string
     website?: string
+    project?: string
     telegram?: string
     qq?: string
     bilibili?: string
@@ -58,7 +63,7 @@ export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
 export const fansubConfigs: FansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
-    const { files } = await fetchRepoFiles(config.links.repository)
+    const { files } = await fetchRepoFiles(config.repo)
     config.animes = parseRepoFiles(files)
     return config
   }),
