@@ -10,6 +10,7 @@ import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createElement } from 'react'
+import type { IconType } from 'react-icons'
 import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili } from 'react-icons/fa6'
 import { LuLink } from 'react-icons/lu'
@@ -28,7 +29,7 @@ function formatLink(platform: keyof FansubConfig['links'], value: string) {
   return {
     website: url.host,
     telegram: `@${path}`,
-    qq: new URLSearchParams(url.search).get('group_code'),
+    qq: new URLSearchParams(url.search).get('group_code') ?? '', // TODO:
     bilibili: path,
   }[platform]
 }
@@ -67,8 +68,18 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
           <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-3">
+            <SocialLink
+              icon={FaGithub}
+              url={`https://github.com/${config.repo.owner}/${config.repo.name}`}
+              label={`${config.repo.owner}/${config.repo.name}`}
+            />
             {keys(config.links).map((key) => (
-              <SocialLink key={key} platform={key} config={config} />
+              <SocialLink
+                key={key}
+                icon={icons[key]}
+                url={config.links[key]!}
+                label={formatLink(key, config.links[key]!)}
+              />
             ))}
           </ul>
         </div>
@@ -88,26 +99,28 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
 }
 
 function SocialLink({
-  platform,
-  config,
+  icon,
+  url,
+  label,
 }: {
-  platform: keyof FansubConfig['links']
-  config: FansubConfig
+  icon: IconType
+  url: string
+  label: string
 }) {
   return (
     <li>
       <div className="flex items-center text-muted-foreground">
-        {createElement(icons[platform], {
+        {createElement(icon, {
           size: 20,
           className: 'mr-2',
         })}
         <a
-          href={config.links[platform]}
+          href={url}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm text-secondary-foreground"
         >
-          {formatLink(platform, config.links[platform]!)}
+          {label}
         </a>
       </div>
     </li>
