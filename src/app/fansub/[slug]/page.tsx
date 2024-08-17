@@ -145,10 +145,12 @@ function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <h3 className="text-lg font-semibold">{name}</h3>
+        <h3 className="text-lg">
+          {parent && <span className="text-muted-foreground">{parent}/</span>}
+          <span className="font-semibold">{name}</span>
+        </h3>
       </a>
       <div className="flex justify-between text-sm text-muted-foreground">
-        <span>{parent}</span>
         <span>{anime.subtitles.length} subtitles</span>
       </div>
     </li>
