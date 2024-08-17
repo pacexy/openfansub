@@ -74,6 +74,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
           <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-3">
+            {/* TODO: should we assume repos have the same owner? */}
             <SocialLink
               icon={FaGithub}
               url={`https://github.com/${config.repos[0].owner}`}
