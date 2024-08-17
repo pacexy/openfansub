@@ -140,7 +140,7 @@ function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
   return (
     <li className="border-b pb-2">
       <a
-        href={`https://github.com/${repo.name}/tree/${repo.branch}/${anime.path}`}
+        href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${anime.path}`}
         className="text-blue-600 hover:text-blue-800"
         target="_blank"
         rel="noopener noreferrer"
