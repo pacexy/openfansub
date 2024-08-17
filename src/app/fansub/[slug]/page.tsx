@@ -153,7 +153,7 @@ function SubtitlesDir({
       >
         <h3 className="text-lg">
           {parent && <span className="text-muted-foreground">{parent}/</span>}
-          <span className="font-semibold">{name}</span>
+          <span>{name}</span>
         </h3>
       </a>
     </li>
