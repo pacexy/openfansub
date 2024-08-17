@@ -3,7 +3,7 @@ import {
   fansubConfigs,
   fansubs,
   type FansubConfig,
-  type IAnime,
+  type ISubtitlesDir,
 } from '~/lib/fansub'
 import type { IRepo } from '~/lib/github'
 import { keys } from '~/lib/utils'
@@ -93,8 +93,12 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="">
-            {(config.animes ?? []).map((anime) => (
-              <Anime key={anime.path} repo={config.repo} anime={anime} />
+            {(config.subtitleDirs ?? []).map((subtitleDir) => (
+              <SubtitlesDir
+                key={subtitleDir.path}
+                repo={config.repo}
+                subtitleDir={subtitleDir}
+              />
             ))}
           </ul>
         </div>
@@ -132,15 +136,21 @@ function SocialLink({
   )
 }
 
-function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
-  const parts = anime.path.split('/')
+function SubtitlesDir({
+  repo,
+  subtitleDir,
+}: {
+  repo: IRepo
+  subtitleDir: ISubtitlesDir
+}) {
+  const parts = subtitleDir.path.split('/')
   const name = parts.pop()
   const parent = parts.join('/')
 
   return (
     <li>
       <a
-        href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${anime.path}`}
+        href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${subtitleDir.path}`}
         className="text-blue-600 hover:text-blue-800"
         target="_blank"
         rel="noopener noreferrer"

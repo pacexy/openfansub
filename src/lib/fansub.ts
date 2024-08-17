@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { readdir } from 'node:fs/promises'
 import { fetchRepoFiles, type IRepoFile } from './github'
 
-export interface IAnime {
+export interface ISubtitlesDir {
   path: string
   subtitles: string[]
 }
@@ -24,15 +24,15 @@ export interface FansubConfig {
     qq?: string
     bilibili?: string
   }
-  animes?: IAnime[]
+  subtitleDirs?: ISubtitlesDir[]
 }
 
 // TODO: impl defineConfig
 
 const supportedSubtitleExts = ['.srt', '.ass']
 
-export function parseRepoFiles(files: IRepoFile[]): IAnime[] {
-  const animes: Map<string, IAnime> = new Map()
+export function parseRepoFiles(files: IRepoFile[]): ISubtitlesDir[] {
+  const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
     if (!supportedSubtitleExts.some((ext) => item.path.endsWith(ext))) continue
@@ -43,18 +43,18 @@ export function parseRepoFiles(files: IRepoFile[]): IAnime[] {
 
     assert(fileName, 'fileName should not be empty')
 
-    let anime = animes.get(path)
-    if (!anime) {
-      anime = {
+    let subtitleDir = subtitleDirs.get(path)
+    if (!subtitleDir) {
+      subtitleDir = {
         path,
         subtitles: [],
       }
-      animes.set(path, anime)
+      subtitleDirs.set(path, subtitleDir)
     }
-    anime.subtitles.push(fileName)
+    subtitleDir.subtitles.push(fileName)
   }
 
-  return Array.from(animes.values())
+  return Array.from(subtitleDirs.values())
 }
 
 const fansubFiles = await readdir('./src/fansubs')
@@ -64,7 +64,7 @@ export const fansubConfigs: FansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
     const { files } = await fetchRepoFiles(config.repo)
-    config.animes = parseRepoFiles(files)
+    config.subtitleDirs = parseRepoFiles(files)
     return config
   }),
 )
