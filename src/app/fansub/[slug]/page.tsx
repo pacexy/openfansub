@@ -67,7 +67,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         {/* left */}
         <div className="md:col-span-1">
           {config.avatar && (
-            <div className="mb-4 aspect-square w-full rounded-full">
+            <div className="mb-4 aspect-square w-full overflow-hidden rounded-full">
               <img src={config.avatar} alt={config.name} className="w-full" />
             </div>
           )}
