@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import { readdir } from 'node:fs/promises'
-import { fetchRepoFiles, type IRepoFile } from './github'
+import { fetchRepoFiles, type IRepo, type IRepoFile } from './github'
 
 export interface ISubtitlesDir {
   name: string
@@ -14,11 +14,7 @@ export interface FansubConfig {
   name: string
   description?: string
   avatar?: string
-  repo: {
-    owner: string
-    name: string
-    branch: string
-  }
+  repos: IRepo[]
   links: {
     website?: string
     project?: string
@@ -33,7 +29,9 @@ export interface FansubConfig {
      */
     exts?: Array<string | RegExp>
   }
-  subtitleDirs?: ISubtitlesDir[]
+  subtitleDirs?: {
+    [repo: string]: ISubtitlesDir[]
+  }
 }
 
 // TODO: impl defineConfig
@@ -89,8 +87,16 @@ export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
 export const fansubConfigs: FansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
-    const { files } = await fetchRepoFiles(config.repo)
-    config.subtitleDirs = getSubtitleDirs(files, config.subtitle?.exts)
+    await Promise.all(
+      config.repos.map(async (repo) => {
+        const { files } = await fetchRepoFiles(repo)
+        config.subtitleDirs = {}
+        config.subtitleDirs[`${repo.owner}/${repo.name}`] = getSubtitleDirs(
+          files,
+          config.subtitle?.exts,
+        )
+      }),
+    )
     return config
   }),
 )

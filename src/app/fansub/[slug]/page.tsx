@@ -76,14 +76,17 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <ul className="space-y-3">
             <SocialLink
               icon={FaGithub}
-              url={`https://github.com/${config.repo.owner}`}
-              label={`${config.repo.owner}`}
+              url={`https://github.com/${config.repos[0].owner}`}
+              label={`${config.repos[0].owner}`}
             />
-            <SocialLink
-              icon={GoRepo}
-              url={`https://github.com/${config.repo.owner}/${config.repo.name}`}
-              label={`${config.repo.name}`}
-            />
+            {config.repos.map((repo) => (
+              <SocialLink
+                key={repo.name}
+                icon={GoRepo}
+                url={`https://github.com/${repo.owner}/${repo.name}`}
+                label={`${repo.name}`}
+              />
+            ))}
             {keys(config.links).map((key) => (
               <SocialLink
                 key={key}
@@ -98,11 +101,9 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         {/* right */}
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
-          <ul className="">
-            {(config.subtitleDirs ?? []).map((sd) => (
-              <SubtitlesDir key={sd.path} repo={config.repo} subtitleDir={sd} />
-            ))}
-          </ul>
+          {config.repos.map((repo) => (
+            <Repo key={repo.name} repo={repo} config={config} />
+          ))}
         </div>
       </div>
     </div>
@@ -135,6 +136,17 @@ function SocialLink({
         </a>
       </div>
     </li>
+  )
+}
+
+function Repo({ repo, config }: { repo: IRepo; config: FansubConfig }) {
+  return (
+    <ul className="">
+      <h3 className="text-lg font-bold">{repo.name}</h3>
+      {config.subtitleDirs?.[`${repo.owner}/${repo.name}`]?.map((sd) => (
+        <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
+      ))}
+    </ul>
   )
 }
 

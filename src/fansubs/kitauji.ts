@@ -5,11 +5,13 @@ const config = {
   name: '北宇治字幕组',
   description: '我们是北宇治字幕组，是由一群喜欢动画的人们组成的非盈利字幕组。',
   avatar: 'https://avatars.githubusercontent.com/u/121954830?s=200&v=4',
-  repo: {
-    owner: 'Kitauji-Sub',
-    name: 'Subtitles',
-    branch: 'main',
-  },
+  repos: [
+    {
+      owner: 'Kitauji-Sub',
+      name: 'Subtitles',
+      branch: 'main',
+    },
+  ],
   links: {
     website: 'https://kitauji.inari.site',
     project: 'https://github.com/orgs/Kitauji-Sub/projects/2',

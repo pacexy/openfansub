@@ -8,11 +8,13 @@ const config = {
   // fetched from https://www.haruhana.org/wp-content/uploads/2024/08/cropped-Haruhana-192x192.jpg'
   // to fix cors
   avatar: '/haruhana.png',
-  repo: {
-    owner: 'HaruhanaSub',
-    name: 'Haruhana-Fansub_Source',
-    branch: 'main',
-  },
+  repos: [
+    {
+      owner: 'HaruhanaSub',
+      name: 'Haruhana-Fansub_Source',
+      branch: 'main',
+    },
+  ],
   links: {
     website: 'https://www.haruhana.org/',
     project: 'https://github.com/users/HaruhanaSub/projects/2',
