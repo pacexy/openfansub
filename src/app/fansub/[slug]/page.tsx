@@ -3,7 +3,7 @@ import {
   fansubConfigs,
   fansubs,
   type FansubConfig,
-  type IAnime,
+  type ISubtitlesDir,
 } from '~/lib/fansub'
 import type { IRepo } from '~/lib/github'
 import { keys } from '~/lib/utils'
@@ -92,9 +92,9 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         {/* right */}
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
-          <ul className="space-y-4">
-            {(config.animes ?? []).map((anime) => (
-              <Anime key={anime.path} repo={config.repo} anime={anime} />
+          <ul className="">
+            {(config.subtitleDirs ?? []).map((sd) => (
+              <SubtitlesDir key={sd.path} repo={config.repo} subtitleDir={sd} />
             ))}
           </ul>
         </div>
@@ -132,25 +132,28 @@ function SocialLink({
   )
 }
 
-function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
-  const parts = anime.path.split('/')
-  const name = parts.pop()
-  const parent = parts.join('/')
-
+function SubtitlesDir({
+  repo,
+  subtitleDir: sd,
+}: {
+  repo: IRepo
+  subtitleDir: ISubtitlesDir
+}) {
   return (
-    <li className="border-b pb-2">
-      <a
-        href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${anime.path}`}
-        className="text-blue-600 hover:text-blue-800"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <h3 className="text-lg font-semibold">{name}</h3>
-      </a>
-      <div className="flex justify-between text-sm text-muted-foreground">
-        <span>{parent}</span>
-        <span>{anime.subtitles.length} subtitles</span>
-      </div>
+    <li>
+      <h3 className="text-lg">
+        {sd.parent && (
+          <span className="text-muted-foreground">{sd.parent}/</span>
+        )}
+        <a
+          href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${sd.path}`}
+          className="text-blue-600 hover:text-blue-800"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {sd.name}
+        </a>
+      </h3>
     </li>
   )
 }

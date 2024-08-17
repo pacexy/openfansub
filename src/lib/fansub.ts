@@ -2,8 +2,10 @@ import assert from 'node:assert'
 import { readdir } from 'node:fs/promises'
 import { fetchRepoFiles, type IRepoFile } from './github'
 
-export interface IAnime {
+export interface ISubtitlesDir {
+  name: string
   path: string
+  parent?: string
   subtitles: string[]
 }
 
@@ -24,15 +26,15 @@ export interface FansubConfig {
     qq?: string
     bilibili?: string
   }
-  animes?: IAnime[]
+  subtitleDirs?: ISubtitlesDir[]
 }
 
 // TODO: impl defineConfig
 
 const supportedSubtitleExts = ['.srt', '.ass']
 
-export function parseRepoFiles(files: IRepoFile[]): IAnime[] {
-  const animes: Map<string, IAnime> = new Map()
+export function getSubtitleDirs(files: IRepoFile[]): ISubtitlesDir[] {
+  const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
     if (!supportedSubtitleExts.some((ext) => item.path.endsWith(ext))) continue
@@ -41,20 +43,28 @@ export function parseRepoFiles(files: IRepoFile[]): IAnime[] {
     const fileName = parts.pop()
     const path = parts.join('/')
 
-    assert(fileName, 'fileName should not be empty')
+    const dirName = parts.pop()
+    const parent = parts.join('/')
 
-    let anime = animes.get(path)
-    if (!anime) {
-      anime = {
+    assert(fileName, 'fileName should not be empty')
+    assert(dirName, 'dirName should not be empty')
+
+    let sd = subtitleDirs.get(path)
+    if (!sd) {
+      sd = {
         path,
+        name: dirName,
+        parent,
         subtitles: [],
       }
-      animes.set(path, anime)
+      subtitleDirs.set(path, sd)
     }
-    anime.subtitles.push(fileName)
+    sd.subtitles.push(fileName)
   }
 
-  return Array.from(animes.values())
+  return Array.from(subtitleDirs.values()).sort((a, b) =>
+    a.path.localeCompare(b.path),
+  )
 }
 
 const fansubFiles = await readdir('./src/fansubs')
@@ -64,7 +74,7 @@ export const fansubConfigs: FansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
     const { files } = await fetchRepoFiles(config.repo)
-    config.animes = parseRepoFiles(files)
+    config.subtitleDirs = getSubtitleDirs(files)
     return config
   }),
 )
