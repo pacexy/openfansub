@@ -15,6 +15,7 @@ const config = {
   },
   links: {
     website: 'https://www.haruhana.org/',
+    project: 'https://github.com/users/HaruhanaSub/projects/2',
     email: 'mailto:mharuhanasub@gmail.com',
   },
   subtitle: {
