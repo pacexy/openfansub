@@ -43,15 +43,15 @@ export function parseRepoFiles(files: IRepoFile[]): ISubtitlesDir[] {
 
     assert(fileName, 'fileName should not be empty')
 
-    let subtitleDir = subtitleDirs.get(path)
-    if (!subtitleDir) {
-      subtitleDir = {
+    let sd = subtitleDirs.get(path)
+    if (!sd) {
+      sd = {
         path,
         subtitles: [],
       }
-      subtitleDirs.set(path, subtitleDir)
+      subtitleDirs.set(path, sd)
     }
-    subtitleDir.subtitles.push(fileName)
+    sd.subtitles.push(fileName)
   }
 
   return Array.from(subtitleDirs.values())

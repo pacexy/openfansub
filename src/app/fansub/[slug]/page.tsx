@@ -93,12 +93,8 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="">
-            {(config.subtitleDirs ?? []).map((subtitleDir) => (
-              <SubtitlesDir
-                key={subtitleDir.path}
-                repo={config.repo}
-                subtitleDir={subtitleDir}
-              />
+            {(config.subtitleDirs ?? []).map((sd) => (
+              <SubtitlesDir key={sd.path} repo={config.repo} subtitleDir={sd} />
             ))}
           </ul>
         </div>
