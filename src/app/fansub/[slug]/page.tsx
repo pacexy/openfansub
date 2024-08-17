@@ -88,16 +88,18 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="space-y-4">
-            {Object.entries(config.animes ?? []).map(([title, anime]) => (
-              <li key={title} className="border-b pb-2">
-                <h3 className="text-lg font-semibold">{title}</h3>
+            {(config.animes ?? []).map((anime) => (
+              <li key={anime.name} className="border-b pb-2">
                 <a
-                  href={anime.path}
+                  href={`${config.links.repository}/tree/main/${anime.path}`}
                   className="text-blue-600 hover:text-blue-800"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  View Subtitles
+                  <h3 className="text-lg font-semibold">{anime.path}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {anime.subtitles.length} subtitles
+                  </p>
                 </a>
               </li>
             ))}

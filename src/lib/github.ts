@@ -16,35 +16,29 @@ export async function fetchAnimeFiles(repoUrl: string): Promise<Anime[]> {
   const [owner, repo] = repoUrl.replace('https://github.com/', '').split('/')
 
   async function fetchFiles(path = '') {
-    console.log(`[${owner}/${repo}] fetching files from`, path)
-    const { data: contents } = await octokit.repos.getContent({
-      owner,
-      repo,
-      path,
-    })
+    const url = `https://ungh.cc/repos/${owner}/${repo}/files/main${path ? '/' + path : ''}`
+    console.log(url)
+    const response = await fetch(url)
+    const data = await response.json()
 
-    if (!Array.isArray(contents)) return
-
-    for (const item of contents) {
-      if (item.type === 'dir') {
-        await fetchFiles(item.path)
+    for (const item of data.files) {
+      if (!supportedSubtitleExts.some((ext) => item.path.endsWith(ext)))
         continue
-      }
-      if (item.type === 'file') {
-        if (!supportedSubtitleExts.includes(item.name)) continue
-        const pathParts = item.path.split('/')
-        const parentName = pathParts[pathParts.length - 2]
-        let anime = animes.get(parentName)
-        if (!anime) {
-          anime = {
-            name: parentName,
-            path: item.path,
-            subtitles: [],
-          }
-          animes.set(parentName, anime)
+
+      const parts = item.path.split('/')
+      const fileName = parts.pop()
+      const parent = parts.join('/')
+      const animeName = parts.pop()
+      let anime = animes.get(parent)
+      if (!anime) {
+        anime = {
+          name: animeName,
+          path: parent,
+          subtitles: [],
         }
-        anime.subtitles.push(item.name)
+        animes.set(parent, anime)
       }
+      anime.subtitles.push(fileName)
     }
   }
 
