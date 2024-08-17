@@ -1,5 +1,10 @@
 import { Button } from '~/components/ui/button'
-import { fansubConfigs, fansubs, type FansubConfig } from '~/lib/fansub'
+import {
+  fansubConfigs,
+  fansubs,
+  type FansubConfig,
+  type IAnime,
+} from '~/lib/fansub'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -88,22 +93,39 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="space-y-4">
-            {Object.entries(config.subtitles).map(([title, link]) => (
-              <li key={title} className="border-b pb-2">
-                <h3 className="text-lg font-semibold">{title}</h3>
-                <a
-                  href={link}
-                  className="text-blue-600 hover:text-blue-800"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Subtitles
-                </a>
-              </li>
+            {(config.animes ?? []).map((anime) => (
+              <Anime
+                key={anime.path}
+                repository={config.links.repository}
+                anime={anime}
+              />
             ))}
           </ul>
         </div>
       </div>
     </div>
+  )
+}
+
+function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
+  const parts = anime.path.split('/')
+  const name = parts.pop()
+  const parent = parts.join('/')
+
+  return (
+    <li className="border-b pb-2">
+      <a
+        href={`${repository}/tree/main/${anime.path}`}
+        className="text-blue-600 hover:text-blue-800"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h3 className="text-lg font-semibold">{name}</h3>
+      </a>
+      <div className="flex justify-between text-sm text-muted-foreground">
+        <span>{parent}</span>
+        <span>{anime.subtitles.length} subtitles</span>
+      </div>
+    </li>
   )
 }
