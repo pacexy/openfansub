@@ -101,9 +101,11 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         {/* right */}
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
-          {config.repos.map((repo) => (
-            <Repo key={repo.name} repo={repo} config={config} />
-          ))}
+          <ul className="space-y-4">
+            {config.repos.map((repo) => (
+              <Repo key={repo.name} repo={repo} config={config} />
+            ))}
+          </ul>
         </div>
       </div>
     </div>
@@ -141,12 +143,13 @@ function SocialLink({
 
 function Repo({ repo, config }: { repo: IRepo; config: FansubConfig }) {
   return (
-    <ul className="">
-      <h3 className="text-lg font-bold">{repo.name}</h3>
-      {config.subtitleDirs?.[`${repo.owner}/${repo.name}`]?.map((sd) => (
-        <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
-      ))}
-    </ul>
+    <li>
+      <ul>
+        {config.subtitleDirs?.[`${repo.owner}/${repo.name}`]?.map((sd) => (
+          <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
+        ))}
+      </ul>
+    </li>
   )
 }
 

@@ -90,7 +90,7 @@ export const fansubConfigs: FansubConfig[] = await Promise.all(
     await Promise.all(
       config.repos.map(async (repo) => {
         const { files } = await fetchRepoFiles(repo)
-        config.subtitleDirs = {}
+        config.subtitleDirs ??= {}
         config.subtitleDirs[`${repo.owner}/${repo.name}`] = getSubtitleDirs(
           files,
           config.subtitle?.exts,
