@@ -1,4 +1,4 @@
-interface IFile {
+export interface IRepoFile {
   path: string
   mode: string
   sha: string
@@ -7,7 +7,7 @@ interface IFile {
 
 export async function fetchRepoFiles(repoUrl: string): Promise<{
   meta: { sha: string }
-  files: IFile[]
+  files: IRepoFile[]
 }> {
   const [owner, repo] = repoUrl.replace('https://github.com/', '').split('/')
   const url = `https://ungh.cc/repos/${owner}/${repo}/files/main`

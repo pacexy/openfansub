@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import { readdir } from 'node:fs/promises'
-import { fetchRepoFiles } from './github'
+import { fetchRepoFiles, type IRepoFile } from './github'
 
 export interface IAnime {
   path: string
@@ -26,9 +26,8 @@ export interface FansubConfig {
 
 const supportedSubtitleExts = ['.srt', '.ass']
 
-export async function fetchAnimeFiles(repoUrl: string): Promise<IAnime[]> {
+export function parseRepoFiles(files: IRepoFile[]): IAnime[] {
   const animes: Map<string, IAnime> = new Map()
-  const { files } = await fetchRepoFiles(repoUrl)
 
   for (const item of files) {
     if (!supportedSubtitleExts.some((ext) => item.path.endsWith(ext))) continue
@@ -59,7 +58,8 @@ export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
 export const fansubConfigs: FansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
-    config.animes = await fetchAnimeFiles(config.links.repository)
+    const { files } = await fetchRepoFiles(config.links.repository)
+    config.animes = parseRepoFiles(files)
     return config
   }),
 )
