@@ -92,7 +92,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         {/* right */}
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
-          <ul className="space-y-4">
+          <ul className="">
             {(config.animes ?? []).map((anime) => (
               <Anime key={anime.path} repo={config.repo} anime={anime} />
             ))}
@@ -138,7 +138,7 @@ function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
   const parent = parts.join('/')
 
   return (
-    <li className="border-b pb-2">
+    <li>
       <a
         href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${anime.path}`}
         className="text-blue-600 hover:text-blue-800"
@@ -150,9 +150,6 @@ function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
           <span className="font-semibold">{name}</span>
         </h3>
       </a>
-      <div className="flex justify-between text-sm text-muted-foreground">
-        <span>{anime.subtitles.length} subtitles</span>
-      </div>
     </li>
   )
 }
