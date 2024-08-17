@@ -15,24 +15,22 @@ import { FaBilibili } from 'react-icons/fa6'
 import { LuLink } from 'react-icons/lu'
 
 const icons = {
-  repository: FaGithub,
   website: LuLink,
   telegram: FaTelegramPlane,
   qq: FaQq,
   bilibili: FaBilibili,
 }
 
-function formatLink(key: keyof FansubConfig['links'], value: string) {
+function formatLink(platform: keyof FansubConfig['links'], value: string) {
   const url = new URL(value)
   const path = url.pathname.replace('/', '')
 
   return {
-    repository: path,
     website: url.host,
     telegram: `@${path}`,
     qq: new URLSearchParams(url.search).get('group_code'),
     bilibili: path,
-  }[key]
+  }[platform]
 }
 
 export function generateMetadata({
@@ -70,22 +68,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-3">
             {keys(config.links).map((key) => (
-              <li key={key}>
-                <div className="flex items-center text-muted-foreground">
-                  {createElement(icons[key], {
-                    size: 20,
-                    className: 'mr-2',
-                  })}
-                  <a
-                    href={config.links[key]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-secondary-foreground"
-                  >
-                    {formatLink(key, config.links[key]!)}
-                  </a>
-                </div>
-              </li>
+              <SocialLink key={key} platform={key} config={config} />
             ))}
           </ul>
         </div>
@@ -101,6 +84,33 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         </div>
       </div>
     </div>
+  )
+}
+
+function SocialLink({
+  platform,
+  config,
+}: {
+  platform: keyof FansubConfig['links']
+  config: FansubConfig
+}) {
+  return (
+    <li>
+      <div className="flex items-center text-muted-foreground">
+        {createElement(icons[platform], {
+          size: 20,
+          className: 'mr-2',
+        })}
+        <a
+          href={config.links[platform]}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-secondary-foreground"
+        >
+          {formatLink(platform, config.links[platform]!)}
+        </a>
+      </div>
+    </li>
   )
 }
 
