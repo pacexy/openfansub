@@ -145,17 +145,17 @@ function SubtitlesDir({
 
   return (
     <li>
-      <a
-        href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${subtitleDir.path}`}
-        className="text-blue-600 hover:text-blue-800"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <h3 className="text-lg">
-          {parent && <span className="text-muted-foreground">{parent}/</span>}
-          <span>{name}</span>
-        </h3>
-      </a>
+      <h3 className="text-lg">
+        {parent && <span className="text-muted-foreground">{parent}/</span>}
+        <a
+          href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${subtitleDir.path}`}
+          className="text-blue-600 hover:text-blue-800"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {name}
+        </a>
+      </h3>
     </li>
   )
 }
