@@ -54,7 +54,9 @@ export function parseRepoFiles(files: IRepoFile[]): ISubtitlesDir[] {
     sd.subtitles.push(fileName)
   }
 
-  return Array.from(subtitleDirs.values())
+  return Array.from(subtitleDirs.values()).sort((a, b) =>
+    a.path.localeCompare(b.path),
+  )
 }
 
 const fansubFiles = await readdir('./src/fansubs')
