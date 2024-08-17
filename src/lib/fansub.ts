@@ -11,7 +11,7 @@ export interface FansubConfig {
   slug: string
   name: string
   description?: string
-  logo?: string
+  avatar?: string
   repo: {
     owner: string
     name: string

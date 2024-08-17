@@ -43,7 +43,7 @@ export function generateMetadata({
   return {
     title: config.name,
     description: config.description,
-    icons: config.logo,
+    icons: config.avatar,
   }
 }
 
@@ -62,9 +62,9 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         {/* left */}
         <div className="md:col-span-1">
           <div className="mb-4 aspect-square w-full rounded-full bg-muted">
-            {config.logo && (
+            {config.avatar && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={config.logo} alt={config.name} className="w-full" />
+              <img src={config.avatar} alt={config.name} className="w-full" />
             )}
           </div>
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
