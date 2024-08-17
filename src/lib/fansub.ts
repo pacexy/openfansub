@@ -31,7 +31,7 @@ export interface FansubConfig {
 
 const supportedSubtitleExts = ['.srt', '.ass']
 
-export function parseRepoFiles(files: IRepoFile[]): ISubtitlesDir[] {
+export function getSubtitleDirs(files: IRepoFile[]): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
@@ -66,7 +66,7 @@ export const fansubConfigs: FansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
     const { files } = await fetchRepoFiles(config.repo)
-    config.subtitleDirs = parseRepoFiles(files)
+    config.subtitleDirs = getSubtitleDirs(files)
     return config
   }),
 )
