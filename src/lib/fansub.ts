@@ -3,7 +3,9 @@ import { readdir } from 'node:fs/promises'
 import { fetchRepoFiles, type IRepoFile } from './github'
 
 export interface ISubtitlesDir {
+  name: string
   path: string
+  parent?: string
   subtitles: string[]
 }
 
@@ -41,12 +43,18 @@ export function getSubtitleDirs(files: IRepoFile[]): ISubtitlesDir[] {
     const fileName = parts.pop()
     const path = parts.join('/')
 
+    const dirName = parts.pop()
+    const parent = parts.join('/')
+
     assert(fileName, 'fileName should not be empty')
+    assert(dirName, 'dirName should not be empty')
 
     let sd = subtitleDirs.get(path)
     if (!sd) {
       sd = {
         path,
+        name: dirName,
+        parent,
         subtitles: [],
       }
       subtitleDirs.set(path, sd)
