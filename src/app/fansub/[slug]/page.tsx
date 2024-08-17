@@ -124,9 +124,7 @@ function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
       </a>
       <div className="flex justify-between text-sm text-muted-foreground">
         <span>{parent}</span>
-        <span title={anime.subtitles.join('\n')}>
-          {anime.subtitles.length} subtitles
-        </span>
+        <span>{anime.subtitles.length} subtitles</span>
       </div>
     </li>
   )
