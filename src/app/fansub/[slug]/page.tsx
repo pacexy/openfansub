@@ -13,7 +13,7 @@ import { createElement } from 'react'
 import type { IconType } from 'react-icons'
 import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili } from 'react-icons/fa6'
-import { GoTable } from 'react-icons/go'
+import { GoMail, GoRepo, GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
 
 const icons = {
@@ -22,6 +22,7 @@ const icons = {
   telegram: FaTelegramPlane,
   qq: FaQq,
   bilibili: FaBilibili,
+  email: GoMail,
 }
 
 function formatLink(platform: keyof FansubConfig['links'], value: string) {
@@ -32,8 +33,9 @@ function formatLink(platform: keyof FansubConfig['links'], value: string) {
     website: url.host,
     project: 'Project',
     telegram: `@${path}`,
-    qq: new URLSearchParams(url.search).get('group_code') ?? '', // TODO:
+    qq: new URLSearchParams(url.search).get('group_code') ?? path,
     bilibili: path,
+    email: url.pathname,
   }[platform]
 }
 
@@ -75,8 +77,13 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <ul className="space-y-3">
             <SocialLink
               icon={FaGithub}
+              url={`https://github.com/${config.repo.owner}`}
+              label={`${config.repo.owner}`}
+            />
+            <SocialLink
+              icon={GoRepo}
               url={`https://github.com/${config.repo.owner}/${config.repo.name}`}
-              label={`${config.repo.owner}/${config.repo.name}`}
+              label={`${config.repo.name}`}
             />
             {keys(config.links).map((key) => (
               <SocialLink
