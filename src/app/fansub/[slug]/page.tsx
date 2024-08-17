@@ -33,7 +33,7 @@ function formatLink(platform: keyof FansubConfig['links'], value: string) {
     website: url.host,
     project: 'Project',
     telegram: `@${path}`,
-    qq: new URLSearchParams(url.search).get('group_code') ?? '', // TODO:
+    qq: new URLSearchParams(url.search).get('group_code') ?? path,
     bilibili: path,
     email: url.pathname,
   }[platform]
