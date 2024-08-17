@@ -1,4 +1,5 @@
 import { readdir } from 'node:fs/promises'
+import { fetchAnimeFiles, type Anime } from './github'
 
 export interface FansubConfig {
   slug: string
@@ -6,23 +7,24 @@ export interface FansubConfig {
   description?: string
   logo: string
   links: {
-    repository?: string
+    repository: string
     website?: string
     telegram?: string
     qq?: string
     bilibili?: string
   }
-  subtitles: {
-    [key: string]: string
-  }
+  animes?: Anime[]
 }
 
 // TODO: impl defineConfig
 
 const fansubFiles = await readdir('./src/fansubs')
 export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
+
 export const fansubConfigs: FansubConfig[] = await Promise.all(
-  fansubs.map((fansub) =>
-    import(`../fansubs/${fansub}`).then((module) => module.default),
-  ),
+  fansubs.map(async (fansub) => {
+    const config = (await import(`../fansubs/${fansub}`)).default
+    config.animes = await fetchAnimeFiles(config.links.repository)
+    return config
+  }),
 )
