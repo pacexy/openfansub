@@ -15,6 +15,7 @@ const config = {
   },
   links: {
     website: 'https://www.haruhana.org/',
+    email: 'mailto:mharuhanasub@gmail.com',
   },
   subtitle: {
     exts: [/\[Subtitles\]\.7z$/],

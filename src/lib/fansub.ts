@@ -25,6 +25,7 @@ export interface FansubConfig {
     telegram?: string
     qq?: string
     bilibili?: string
+    email?: string
   }
   subtitle?: {
     /**
