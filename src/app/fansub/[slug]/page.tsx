@@ -1,6 +1,10 @@
 import { Button } from '~/components/ui/button'
-import { fansubConfigs, fansubs, type FansubConfig } from '~/lib/fansub'
-import type { IAnime } from '~/lib/github'
+import {
+  fansubConfigs,
+  fansubs,
+  type FansubConfig,
+  type IAnime,
+} from '~/lib/fansub'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -91,7 +95,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <ul className="space-y-4">
             {(config.animes ?? []).map((anime) => (
               <Anime
-                key={anime.name}
+                key={anime.path}
                 repository={config.links.repository}
                 anime={anime}
               />
