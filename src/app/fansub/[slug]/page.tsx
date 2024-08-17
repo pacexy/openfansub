@@ -91,7 +91,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <ul className="space-y-4">
             {(config.animes ?? []).map((anime) => (
               <Anime
-                key={anime.path}
+                key={anime.name}
                 repository={config.links.repository}
                 anime={anime}
               />
@@ -104,23 +104,26 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
 }
 
 function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
-  const dir = `${repository}/tree/main/${anime.path}`
+  const parts = anime.path.split('/')
+  const name = parts.pop()
+  const parent = parts.join('/')
+
   return (
     <li className="border-b pb-2">
       <a
-        href={dir}
+        href={`${repository}/tree/main/${anime.path}`}
         className="text-blue-600 hover:text-blue-800"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <h3 className="text-lg font-semibold">{anime.path}</h3>
+        <h3 className="text-lg font-semibold">{name}</h3>
       </a>
-      <p
-        className="text-sm text-muted-foreground"
-        title={anime.subtitles.join('\n')}
-      >
-        {anime.subtitles.length} subtitles
-      </p>
+      <div className="flex justify-between text-sm text-muted-foreground">
+        <span>{parent}</span>
+        <span title={anime.subtitles.join('\n')}>
+          {anime.subtitles.length} subtitles
+        </span>
+      </div>
     </li>
   )
 }

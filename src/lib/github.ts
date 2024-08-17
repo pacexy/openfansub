@@ -3,7 +3,6 @@ import assert from 'node:assert'
 const supportedSubtitleExts = ['.srt', '.ass']
 
 export interface IAnime {
-  name: string
   path: string
   subtitles: string[]
 }
@@ -34,20 +33,17 @@ export async function fetchAnimeFiles(repoUrl: string): Promise<IAnime[]> {
 
     const parts = item.path.split('/')
     const fileName = parts.pop()
+    const path = parts.join('/')
+
     assert(fileName, 'fileName should not be empty')
 
-    const parent = parts.join('/')
-    const animeName = parts.pop()
-    assert(animeName, 'animeName should not be empty')
-
-    let anime = animes.get(parent)
+    let anime = animes.get(path)
     if (!anime) {
       anime = {
-        name: animeName,
-        path: parent,
+        path,
         subtitles: [],
       }
-      animes.set(parent, anime)
+      animes.set(path, anime)
     }
     anime.subtitles.push(fileName)
   }
