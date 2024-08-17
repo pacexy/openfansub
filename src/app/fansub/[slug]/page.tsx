@@ -5,6 +5,7 @@ import {
   type FansubConfig,
   type IAnime,
 } from '~/lib/fansub'
+import type { IRepo } from '~/lib/github'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -94,11 +95,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="space-y-4">
             {(config.animes ?? []).map((anime) => (
-              <Anime
-                key={anime.path}
-                repository={config.links.repository}
-                anime={anime}
-              />
+              <Anime key={anime.path} repo={config.repo} anime={anime} />
             ))}
           </ul>
         </div>
@@ -107,7 +104,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
   )
 }
 
-function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
+function Anime({ repo, anime }: { repo: IRepo; anime: IAnime }) {
   const parts = anime.path.split('/')
   const name = parts.pop()
   const parent = parts.join('/')
@@ -115,7 +112,7 @@ function Anime({ repository, anime }: { repository: string; anime: IAnime }) {
   return (
     <li className="border-b pb-2">
       <a
-        href={`${repository}/tree/main/${anime.path}`}
+        href={`https://github.com/${repo.name}/tree/${repo.branch}/${anime.path}`}
         className="text-blue-600 hover:text-blue-800"
         target="_blank"
         rel="noopener noreferrer"

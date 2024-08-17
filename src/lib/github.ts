@@ -1,3 +1,9 @@
+export interface IRepo {
+  owner: string
+  name: string
+  branch: string
+}
+
 export interface IRepoFile {
   path: string
   mode: string
@@ -5,12 +11,11 @@ export interface IRepoFile {
   size: number
 }
 
-export async function fetchRepoFiles(repoUrl: string): Promise<{
+export async function fetchRepoFiles(repo: IRepo): Promise<{
   meta: { sha: string }
   files: IRepoFile[]
 }> {
-  const [owner, repo] = repoUrl.replace('https://github.com/', '').split('/')
-  const url = `https://ungh.cc/repos/${owner}/${repo}/files/main`
+  const url = `https://ungh.cc/repos/${repo.owner}/${repo.name}/files/${repo.branch}`
   const response = await fetch(url)
   return await response.json()
 }
