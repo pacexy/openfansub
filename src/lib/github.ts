@@ -12,11 +12,11 @@ export interface Anime {
 }
 
 export async function fetchAnimeFiles(repoUrl: string): Promise<Anime[]> {
+  const animes: Map<string, Anime> = new Map()
   const [owner, repo] = repoUrl.replace('https://github.com/', '').split('/')
 
-  const animes: Anime[] = []
-
   async function fetchFiles(path = '') {
+    console.log(`[${owner}/${repo}] fetching files from`, path)
     const { data: contents } = await octokit.repos.getContent({
       owner,
       repo,
@@ -34,15 +34,20 @@ export async function fetchAnimeFiles(repoUrl: string): Promise<Anime[]> {
         if (!supportedSubtitleExts.includes(item.name)) continue
         const pathParts = item.path.split('/')
         const parentName = pathParts[pathParts.length - 2]
-        animes.push({
-          name: parentName,
-          path: item.path,
-          subtitles: [item.name],
-        })
+        let anime = animes.get(parentName)
+        if (!anime) {
+          anime = {
+            name: parentName,
+            path: item.path,
+            subtitles: [],
+          }
+          animes.set(parentName, anime)
+        }
+        anime.subtitles.push(item.name)
       }
     }
   }
 
   await fetchFiles()
-  return animes
+  return Array.from(animes.values())
 }
