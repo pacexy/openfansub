@@ -26,18 +26,33 @@ export interface FansubConfig {
     qq?: string
     bilibili?: string
   }
+  subtitle?: {
+    /**
+     * @default ['.srt', '.ass']
+     */
+    exts?: Array<string | RegExp>
+  }
   subtitleDirs?: ISubtitlesDir[]
 }
 
 // TODO: impl defineConfig
 
-const supportedSubtitleExts = ['.srt', '.ass']
+const defaultSubtitleExts = ['.srt', '.ass']
 
-export function getSubtitleDirs(files: IRepoFile[]): ISubtitlesDir[] {
+export function getSubtitleDirs(
+  files: IRepoFile[],
+  exts: Array<string | RegExp> = defaultSubtitleExts,
+): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
-    if (!supportedSubtitleExts.some((ext) => item.path.endsWith(ext))) continue
+    if (
+      !exts.some((e) =>
+        typeof e === 'string' ? item.path.endsWith(e) : e.test(item.path),
+      )
+    ) {
+      continue
+    }
 
     const parts = item.path.split('/')
     const fileName = parts.pop()
@@ -74,7 +89,7 @@ export const fansubConfigs: FansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
     const { files } = await fetchRepoFiles(config.repo)
-    config.subtitleDirs = getSubtitleDirs(files)
+    config.subtitleDirs = getSubtitleDirs(files, config.subtitle?.exts)
     return config
   }),
 )

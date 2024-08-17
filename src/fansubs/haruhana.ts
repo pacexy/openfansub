@@ -16,6 +16,9 @@ const config = {
   links: {
     website: 'https://www.haruhana.org/',
   },
+  subtitle: {
+    exts: [/\[Subtitles\]\.7z$/],
+  },
 } satisfies FansubConfig
 
 export default config
