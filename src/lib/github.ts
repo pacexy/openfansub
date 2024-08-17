@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 const supportedSubtitleExts = ['.srt', '.ass']
 
 export interface IAnime {
@@ -6,21 +8,38 @@ export interface IAnime {
   subtitles: string[]
 }
 
-export async function fetchAnimeFiles(repoUrl: string): Promise<IAnime[]> {
-  const animes: Map<string, IAnime> = new Map()
-  const [owner, repo] = repoUrl.replace('https://github.com/', '').split('/')
+interface IFile {
+  path: string
+  mode: string
+  sha: string
+  size: number
+}
 
+async function fetchRepoFiles(repoUrl: string): Promise<{
+  meta: { sha: string }
+  files: IFile[]
+}> {
+  const [owner, repo] = repoUrl.replace('https://github.com/', '').split('/')
   const url = `https://ungh.cc/repos/${owner}/${repo}/files/main`
   const response = await fetch(url)
-  const data = await response.json()
+  return await response.json()
+}
 
-  for (const item of data.files) {
+export async function fetchAnimeFiles(repoUrl: string): Promise<IAnime[]> {
+  const animes: Map<string, IAnime> = new Map()
+  const { files } = await fetchRepoFiles(repoUrl)
+
+  for (const item of files) {
     if (!supportedSubtitleExts.some((ext) => item.path.endsWith(ext))) continue
 
     const parts = item.path.split('/')
     const fileName = parts.pop()
+    assert(fileName, 'fileName should not be empty')
+
     const parent = parts.join('/')
     const animeName = parts.pop()
+    assert(animeName, 'animeName should not be empty')
+
     let anime = animes.get(parent)
     if (!anime) {
       anime = {
