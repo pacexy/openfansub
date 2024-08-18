@@ -74,20 +74,6 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
           <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
           <p className="mb-4 text-muted-foreground">{config.description}</p>
           <ul className="space-y-3">
-            {/* TODO: should we assume repos have the same owner? */}
-            <SocialLink
-              icon={FaGithub}
-              url={`https://github.com/${config.repos[0].owner}`}
-              label={`${config.repos[0].owner}`}
-            />
-            {config.repos.map((repo) => (
-              <SocialLink
-                key={repo.name}
-                icon={GoRepo}
-                url={`https://github.com/${repo.owner}/${repo.name}`}
-                label={`${repo.name}`}
-              />
-            ))}
             {keys(config.links).map((key) => (
               <SocialLink
                 key={key}
@@ -145,6 +131,26 @@ function SocialLink({
 function Repo({ repo, config }: { repo: IRepo; config: FansubConfig }) {
   return (
     <li>
+      <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
+        <GoRepo className="mr-2" size={16} />
+        <a
+          href={`https://github.com/${repo.owner}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          {repo.owner}
+        </a>
+        <span className="mx-1">/</span>
+        <a
+          href={`https://github.com/${repo.owner}/${repo.name}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          {repo.name}
+        </a>
+      </h3>
       <ul>
         {config.subtitleDirs?.[`${repo.owner}/${repo.name}`]?.map((sd) => (
           <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
