@@ -11,7 +11,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createElement } from 'react'
 import type { IconType } from 'react-icons'
-import { FaGithub, FaQq, FaTelegramPlane } from 'react-icons/fa'
+import { FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili } from 'react-icons/fa6'
 import { GoMail, GoRepo, GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
@@ -25,12 +25,15 @@ const icons = {
   email: GoMail,
 }
 
-function formatLink(platform: keyof FansubConfig['links'], value: string) {
-  const url = new URL(value)
+function formatLink(
+  platform: keyof FansubConfig['links'],
+  config: FansubConfig,
+) {
+  const url = new URL(config.links[platform]!)
   const path = url.pathname.replace('/', '')
 
   return {
-    website: url.host,
+    website: config.status === 'inactive' ? <del>{url.host}</del> : url.host,
     project: 'Project',
     telegram: `@${path}`,
     qq: new URLSearchParams(url.search).get('group_code') ?? path,
@@ -79,7 +82,7 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
                 key={key}
                 icon={icons[key]}
                 url={config.links[key]!}
-                label={formatLink(key, config.links[key]!)}
+                label={formatLink(key, config)}
               />
             ))}
           </ul>
@@ -106,7 +109,7 @@ function SocialLink({
 }: {
   icon: IconType
   url: string
-  label: string
+  label: React.ReactNode
 }) {
   return (
     <li>

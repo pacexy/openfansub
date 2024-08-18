@@ -12,6 +12,7 @@ export interface ISubtitlesDir {
 export interface FansubConfig {
   slug: string
   name: string
+  status?: 'active' | 'inactive'
   description?: string
   avatar?: string
   repos: IRepo[]
