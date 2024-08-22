@@ -13,7 +13,7 @@ import { createElement } from 'react'
 import type { IconType } from 'react-icons'
 import { FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili } from 'react-icons/fa6'
-import { GoMail, GoRepo, GoTable } from 'react-icons/go'
+import { GoMail, GoRepo, GoReport, GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
 
 const icons = {
@@ -85,6 +85,11 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
                 label={formatLink(key, config)}
               />
             ))}
+            <SocialLink
+              icon={GoReport}
+              url={`https://github.com/${config.repos[0].owner}/${config.repos[0].name}/issues`}
+              label="Feedback"
+            />
           </ul>
         </div>
 
