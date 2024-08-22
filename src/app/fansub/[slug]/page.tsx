@@ -36,7 +36,7 @@ function formatLink(
     website: config.status === 'inactive' ? <del>{url.host}</del> : url.host,
     project: 'Project',
     telegram: `@${path}`,
-    qq: new URLSearchParams(url.search).get('group_code') ?? path,
+    qq: (new URLSearchParams(url.search).get('group_code') ?? path) || 'QQ',
     bilibili: path,
     email: url.pathname,
   }[platform]
