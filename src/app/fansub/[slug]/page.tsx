@@ -15,6 +15,7 @@ import { FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili } from 'react-icons/fa6'
 import { GoMail, GoRepo, GoReport, GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
+import { SiGithubsponsors } from 'react-icons/si'
 
 const icons = {
   website: LuLink,
@@ -23,6 +24,7 @@ const icons = {
   qq: FaQq,
   bilibili: FaBilibili,
   email: GoMail,
+  sponsor: SiGithubsponsors,
 }
 
 function formatLink(
@@ -39,6 +41,7 @@ function formatLink(
     qq: (new URLSearchParams(url.search).get('group_code') ?? path) || 'QQ',
     bilibili: path,
     email: url.pathname,
+    sponsor: url.host + url.pathname,
   }[platform]
 }
 

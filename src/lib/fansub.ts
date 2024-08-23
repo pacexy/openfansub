@@ -23,6 +23,7 @@ export interface FansubConfig {
     qq?: string
     bilibili?: string
     email?: string
+    sponsor?: string
   }
   subtitle?: {
     /**
