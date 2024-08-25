@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { createElement } from 'react'
 import type { IconType } from 'react-icons'
 import { FaQq, FaTelegramPlane } from 'react-icons/fa'
-import { FaBilibili } from 'react-icons/fa6'
+import { FaBilibili, FaWeibo, FaXTwitter } from 'react-icons/fa6'
 import { GoMail, GoRepo, GoReport, GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
 import { SiGithubsponsors } from 'react-icons/si'
@@ -23,6 +23,8 @@ const icons = {
   telegram: FaTelegramPlane,
   qq: FaQq,
   bilibili: FaBilibili,
+  twitter: FaXTwitter,
+  weibo: FaWeibo,
   email: GoMail,
   sponsor: SiGithubsponsors,
 }
@@ -40,6 +42,8 @@ function formatLink(
     telegram: `@${path}`,
     qq: (new URLSearchParams(url.search).get('group_code') ?? path) || 'QQ',
     bilibili: path,
+    twitter: `@${path}`,
+    weibo: `@${path}`,
     email: url.pathname,
     sponsor: url.host + url.pathname,
   }[platform]

@@ -22,6 +22,8 @@ export interface FansubConfig {
     telegram?: string
     qq?: string
     bilibili?: string
+    twitter?: string
+    weibo?: string
     email?: string
     sponsor?: string
   }
