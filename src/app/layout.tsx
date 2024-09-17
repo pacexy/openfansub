@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn('font-sans', fontSans.variable)}>
         <Providers>
-          <header className="flex">
+          <header className="flex h-16 items-center justify-between px-4">
             OpenFansub
             <Search fansubConfigs={fansubConfigs} />
           </header>

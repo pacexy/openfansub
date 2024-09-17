@@ -1,5 +1,6 @@
 'use client'
 
+import { Input } from '~/components/ui/input'
 import type { FansubConfig } from '~/lib/fansub'
 import { useState } from 'react'
 
@@ -9,12 +10,12 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
 
   return (
     <div className="relative">
-      <input
+      <Input
         placeholder="Search"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
       />
-      <ul className="absolute h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1">
+      <ul className="absolute right-0 mt-4 h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1">
         {fansubConfigs.map((config) =>
           Object.values(config.subtitleDirs ?? {}).map((dirs) =>
             dirs
