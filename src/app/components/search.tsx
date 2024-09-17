@@ -21,7 +21,9 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
               .filter((dir) => keyword.length > 1 && reg.test(dir.path))
               .map((dir) => (
                 <li key={dir.path}>
-                  {config.name}
+                  <span className="mr-2 bg-muted px-1 py-0.5 text-sm text-muted-foreground">
+                    {config.name}
+                  </span>
                   <a
                     dangerouslySetInnerHTML={{
                       __html: dir.path.replace(
