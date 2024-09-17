@@ -16,7 +16,7 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
       />
       <ul>
         {fansubConfigs.map((config) =>
-          Object.entries(config.subtitleDirs ?? {}).map(([repo, dirs]) =>
+          Object.values(config.subtitleDirs ?? {}).map((dirs) =>
             dirs
               .filter((dir) => keyword.length > 1 && reg.test(dir.path))
               .map((dir) => (
