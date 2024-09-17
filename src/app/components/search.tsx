@@ -8,6 +8,9 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
   const [keyword, setKeyword] = useState('')
   const reg = new RegExp(keyword, 'i')
 
+  // avoid rendering a long list
+  const minLength = /^[a-zA-Z]/.test(keyword) ? 2 : 1
+
   return (
     <div className="relative">
       <Input
@@ -15,7 +18,7 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
       />
-      {keyword.length > 1 && (
+      {keyword.length >= minLength && (
         <ul className="absolute right-0 mt-4 h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1">
           {fansubConfigs.map((config) =>
             // TODO: remove !
