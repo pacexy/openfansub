@@ -18,7 +18,8 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
       {keyword.length > 1 && (
         <ul className="absolute right-0 mt-4 h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1">
           {fansubConfigs.map((config) =>
-            Object.values(config.subtitleDirs ?? {}).map((dirs) =>
+            // TODO: remove !
+            Object.values(config.subtitleDirs!).map((dirs) =>
               dirs
                 .filter((dir) => reg.test(dir.path))
                 .map((dir) => (
