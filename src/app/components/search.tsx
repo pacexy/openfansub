@@ -8,13 +8,13 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
   const reg = new RegExp(keyword, 'i')
 
   return (
-    <>
+    <div className="relative">
       <input
         placeholder="Search"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
       />
-      <ul>
+      <ul className="absolute h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1">
         {fansubConfigs.map((config) =>
           Object.values(config.subtitleDirs ?? {}).map((dirs) =>
             dirs
@@ -25,6 +25,7 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
                     {config.name}
                   </span>
                   <a
+                    className="text-foreground"
                     dangerouslySetInnerHTML={{
                       __html: dir.path.replace(
                         reg,
@@ -37,6 +38,6 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
           ),
         )}
       </ul>
-    </>
+    </div>
   )
 }
