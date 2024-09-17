@@ -1,11 +1,11 @@
 'use client'
 
 import type { FansubConfig } from '~/lib/fansub'
-import { fuzzyMatch } from '~/lib/utils'
 import { useState } from 'react'
 
 export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
   const [keyword, setKeyword] = useState('')
+  const reg = new RegExp(keyword, 'i')
 
   return (
     <>
@@ -18,13 +18,18 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
         {fansubConfigs.map((config) =>
           Object.entries(config.subtitleDirs ?? {}).map(([repo, dirs]) =>
             dirs
-              .filter(
-                (dir) => keyword.length > 1 && fuzzyMatch(dir.path, keyword),
-              )
+              .filter((dir) => keyword.length > 1 && reg.test(dir.path))
               .map((dir) => (
                 <li key={dir.path}>
                   {config.name}
-                  <a>{dir.path}</a>
+                  <a
+                    dangerouslySetInnerHTML={{
+                      __html: dir.path.replace(
+                        reg,
+                        (match) => `<mark>${match}</mark>`,
+                      ),
+                    }}
+                  ></a>
                 </li>
               )),
           ),
