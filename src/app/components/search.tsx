@@ -2,6 +2,7 @@
 
 import { Input } from '~/components/ui/input'
 import type { FansubConfig } from '~/lib/fansub'
+import { cn } from '~/lib/utils'
 import { useState } from 'react'
 
 export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
@@ -17,9 +18,15 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
         placeholder="Search"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
+        className="peer"
       />
       {keyword.length >= minLength && (
-        <ul className="absolute right-0 mt-4 h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1">
+        <ul
+          className={cn(
+            'absolute right-0 mt-4 h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1',
+            'hidden peer-focus:block',
+          )}
+        >
           {fansubConfigs.map((config) =>
             // TODO: remove !
             Object.values(config.subtitleDirs!).map((dirs) =>
