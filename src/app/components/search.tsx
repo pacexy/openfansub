@@ -13,18 +13,21 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
   const minLength = /^[a-zA-Z]/.test(keyword) ? 2 : 1
 
   return (
-    <div className="relative">
+    <div className="relative [&_ul]:focus-within:block">
       <Input
         placeholder="Search"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        className="peer"
       />
       {keyword.length >= minLength && (
         <ul
+          // The tabIndex attribute allows the ul to receive focus.
+          // Combined with `[&_ul]:focus-within:block` of its parent,
+          // this ensures the list remains visible when clicked.
+          tabIndex={0}
           className={cn(
             'absolute right-0 mt-4 h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1',
-            'hidden peer-focus:block',
+            'hidden',
           )}
         >
           {fansubConfigs.map((config) =>
