@@ -101,6 +101,8 @@ export const fansubConfigs: FansubConfig[] = await Promise.all(
         )
       }),
     )
+    // TODO: `config.subtitle` is unnecessary in output
+    config.subtitle = undefined
     return config
   }),
 )

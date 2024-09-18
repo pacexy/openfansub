@@ -1,8 +1,10 @@
 import './globals.css'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { Providers } from '~/app/components/providers'
+import { Search } from '~/app/components/search'
 import { TailwindIndicator } from '~/app/components/tailwind-indicator'
 import { Toaster } from '~/components/ui/sonner'
+import { fansubConfigs } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
@@ -31,7 +33,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn('font-sans', fontSans.variable)}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <header className="flex h-16 items-center justify-between px-4">
+            OpenFansub
+            <Search fansubConfigs={fansubConfigs} />
+          </header>
+          {children}
+        </Providers>
         <Toaster />
         <TailwindIndicator />
       </body>
