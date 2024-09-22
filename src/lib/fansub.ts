@@ -35,7 +35,7 @@ export interface FansubConfig {
   }
 }
 
-export interface ResolvedFansubConfig extends Omit<FansubConfig, 'subtitle'> {
+export interface Fansub extends Omit<FansubConfig, 'subtitle'> {
   subtitleDirs: {
     [repo: string]: ISubtitlesDir[]
   }
@@ -91,12 +91,10 @@ export function getSubtitleDirs(
 }
 
 const fansubFiles = await readdir('./src/fansubs')
-export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
+export const fansubSlugs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
 
-export async function resolveConfig(
-  config: FansubConfig,
-): Promise<ResolvedFansubConfig> {
-  const subtitleDirs: ResolvedFansubConfig['subtitleDirs'] = {}
+export async function resolveConfig(config: FansubConfig): Promise<Fansub> {
+  const subtitleDirs: Fansub['subtitleDirs'] = {}
 
   await Promise.all(
     config.repos.map(async (repo) => {
@@ -114,8 +112,8 @@ export async function resolveConfig(
   }
 }
 
-export const fansubConfigs: ResolvedFansubConfig[] = await Promise.all(
-  fansubs.map(async (fansub) => {
+export const fansubs: Fansub[] = await Promise.all(
+  fansubSlugs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
     return resolveConfig(config)
   }),

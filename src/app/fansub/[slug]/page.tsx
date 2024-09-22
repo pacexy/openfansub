@@ -1,9 +1,9 @@
 import { Button } from '~/components/ui/button'
 import {
-  fansubConfigs,
   fansubs,
+  fansubSlugs,
+  type Fansub,
   type ISubtitlesDir,
-  type ResolvedFansubConfig,
 } from '~/lib/fansub'
 import type { IRepo } from '~/lib/github'
 import { keys } from '~/lib/utils'
@@ -29,10 +29,7 @@ const icons = {
   sponsor: SiGithubsponsors,
 }
 
-function formatLink(
-  platform: keyof ResolvedFansubConfig['links'],
-  config: ResolvedFansubConfig,
-) {
+function formatLink(platform: keyof Fansub['links'], config: Fansub) {
   const url = new URL(config.links[platform]!)
   const path = url.pathname.replace('/', '')
 
@@ -54,7 +51,7 @@ export function generateMetadata({
 }: {
   params: { slug: string }
 }): Metadata {
-  const config = fansubConfigs.find((c) => c.slug === params.slug)!
+  const config = fansubs.find((c) => c.slug === params.slug)!
   return {
     title: config.name,
     description: config.description,
@@ -63,11 +60,11 @@ export function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return fansubs.map((slug) => ({ slug }))
+  return fansubSlugs.map((slug) => ({ slug }))
 }
 
 export default function FansubPage({ params }: { params: { slug: string } }) {
-  const config = fansubConfigs.find((c) => c.slug === params.slug)!
+  const config = fansubs.find((c) => c.slug === params.slug)!
   return (
     <div className="container mx-auto px-4 py-8">
       <Link href="/" className="mb-4 inline-block">
@@ -143,7 +140,7 @@ function SocialLink({
   )
 }
 
-function Repo({ repo, config }: { repo: IRepo; config: ResolvedFansubConfig }) {
+function Repo({ repo, config }: { repo: IRepo; config: Fansub }) {
   return (
     <li>
       <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
