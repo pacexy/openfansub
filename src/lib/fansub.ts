@@ -91,7 +91,7 @@ export function getSubtitleDirs(
 }
 
 const fansubFiles = await readdir('./src/fansubs')
-export const fansubSlugs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
+export const fansubSlugs = fansubFiles.map((f) => f.replace(/\.ts$/, ''))
 
 export async function resolveConfig(config: FansubConfig): Promise<Fansub> {
   const subtitleDirs: Fansub['subtitleDirs'] = {}
@@ -113,8 +113,8 @@ export async function resolveConfig(config: FansubConfig): Promise<Fansub> {
 }
 
 export const fansubs: Fansub[] = await Promise.all(
-  fansubSlugs.map(async (fansub) => {
-    const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
-    return resolveConfig(config)
+  fansubSlugs.map(async (slug) => {
+    const mod = await import(`../fansubs/${slug}`)
+    return resolveConfig(mod.default)
   }),
 )
