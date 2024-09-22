@@ -33,12 +33,17 @@ export interface FansubConfig {
      */
     exts?: Array<string | RegExp>
   }
-  subtitleDirs?: {
+}
+
+export interface ResolvedFansubConfig extends Omit<FansubConfig, 'subtitle'> {
+  subtitleDirs: {
     [repo: string]: ISubtitlesDir[]
   }
 }
 
-// TODO: impl defineConfig
+export function defineConfig(config: FansubConfig): FansubConfig {
+  return config
+}
 
 const defaultSubtitleExts = ['.srt', '.ass']
 
@@ -88,21 +93,30 @@ export function getSubtitleDirs(
 const fansubFiles = await readdir('./src/fansubs')
 export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
 
-export const fansubConfigs: FansubConfig[] = await Promise.all(
+export async function resolveConfig(
+  config: FansubConfig,
+): Promise<ResolvedFansubConfig> {
+  const subtitleDirs: ResolvedFansubConfig['subtitleDirs'] = {}
+
+  await Promise.all(
+    config.repos.map(async (repo) => {
+      const { files } = await fetchRepoFiles(repo)
+      subtitleDirs[`${repo.owner}/${repo.name}`] = getSubtitleDirs(
+        files,
+        config.subtitle?.exts,
+      )
+    }),
+  )
+
+  return {
+    ...config,
+    subtitleDirs,
+  }
+}
+
+export const fansubConfigs: ResolvedFansubConfig[] = await Promise.all(
   fansubs.map(async (fansub) => {
     const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
-    await Promise.all(
-      config.repos.map(async (repo) => {
-        const { files } = await fetchRepoFiles(repo)
-        config.subtitleDirs ??= {}
-        config.subtitleDirs[`${repo.owner}/${repo.name}`] = getSubtitleDirs(
-          files,
-          config.subtitle?.exts,
-        )
-      }),
-    )
-    // TODO: `config.subtitle` is unnecessary in output
-    config.subtitle = undefined
-    return config
+    return resolveConfig(config)
   }),
 )

@@ -2,8 +2,8 @@ import { Button } from '~/components/ui/button'
 import {
   fansubConfigs,
   fansubs,
-  type FansubConfig,
   type ISubtitlesDir,
+  type ResolvedFansubConfig,
 } from '~/lib/fansub'
 import type { IRepo } from '~/lib/github'
 import { keys } from '~/lib/utils'
@@ -30,8 +30,8 @@ const icons = {
 }
 
 function formatLink(
-  platform: keyof FansubConfig['links'],
-  config: FansubConfig,
+  platform: keyof ResolvedFansubConfig['links'],
+  config: ResolvedFansubConfig,
 ) {
   const url = new URL(config.links[platform]!)
   const path = url.pathname.replace('/', '')
@@ -143,7 +143,7 @@ function SocialLink({
   )
 }
 
-function Repo({ repo, config }: { repo: IRepo; config: FansubConfig }) {
+function Repo({ repo, config }: { repo: IRepo; config: ResolvedFansubConfig }) {
   return (
     <li>
       <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
@@ -167,7 +167,7 @@ function Repo({ repo, config }: { repo: IRepo; config: FansubConfig }) {
         </a>
       </h3>
       <ul>
-        {config.subtitleDirs?.[`${repo.owner}/${repo.name}`]?.map((sd) => (
+        {config.subtitleDirs[`${repo.owner}/${repo.name}`]?.map((sd) => (
           <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
         ))}
       </ul>
