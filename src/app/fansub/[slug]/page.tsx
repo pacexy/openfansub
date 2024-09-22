@@ -29,12 +29,12 @@ const icons = {
   sponsor: SiGithubsponsors,
 }
 
-function formatLink(platform: keyof Fansub['links'], config: Fansub) {
-  const url = new URL(config.links[platform]!)
+function formatLink(platform: keyof Fansub['links'], fansub: Fansub) {
+  const url = new URL(fansub.links[platform]!)
   const path = url.pathname.replace('/', '')
 
   return {
-    website: config.status === 'inactive' ? <del>{url.host}</del> : url.host,
+    website: fansub.status === 'inactive' ? <del>{url.host}</del> : url.host,
     project: 'Project',
     telegram: `@${path}`,
     qq: (new URLSearchParams(url.search).get('group_code') ?? path) || 'QQ',
@@ -51,11 +51,11 @@ export function generateMetadata({
 }: {
   params: { slug: string }
 }): Metadata {
-  const config = fansubs.find((c) => c.slug === params.slug)!
+  const fansub = fansubs.find((c) => c.slug === params.slug)!
   return {
-    title: config.name,
-    description: config.description,
-    icons: config.avatar,
+    title: fansub.name,
+    description: fansub.description,
+    icons: fansub.avatar,
   }
 }
 
@@ -64,7 +64,7 @@ export async function generateStaticParams() {
 }
 
 export default function FansubPage({ params }: { params: { slug: string } }) {
-  const config = fansubs.find((c) => c.slug === params.slug)!
+  const fansub = fansubs.find((c) => c.slug === params.slug)!
   return (
     <div className="container mx-auto px-4 py-8">
       <Link href="/" className="mb-4 inline-block">
@@ -73,25 +73,25 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
       <div className="mt-4 grid grid-cols-1 gap-16 md:grid-cols-3">
         {/* left */}
         <div className="md:col-span-1">
-          {config.avatar && (
+          {fansub.avatar && (
             <div className="mb-4 aspect-square w-full overflow-hidden rounded-full">
-              <img src={config.avatar} alt={config.name} className="w-full" />
+              <img src={fansub.avatar} alt={fansub.name} className="w-full" />
             </div>
           )}
-          <h1 className="mb-2 text-2xl font-bold">{config.name}</h1>
-          <p className="mb-4 text-muted-foreground">{config.description}</p>
+          <h1 className="mb-2 text-2xl font-bold">{fansub.name}</h1>
+          <p className="mb-4 text-muted-foreground">{fansub.description}</p>
           <ul className="space-y-3">
-            {keys(config.links).map((key) => (
+            {keys(fansub.links).map((key) => (
               <SocialLink
                 key={key}
                 icon={icons[key]}
-                url={config.links[key]!}
-                label={formatLink(key, config)}
+                url={fansub.links[key]!}
+                label={formatLink(key, fansub)}
               />
             ))}
             <SocialLink
               icon={GoReport}
-              url={`https://github.com/${config.repos[0].owner}/${config.repos[0].name}/issues`}
+              url={`https://github.com/${fansub.repos[0].owner}/${fansub.repos[0].name}/issues`}
               label="Feedback"
             />
           </ul>
@@ -101,8 +101,8 @@ export default function FansubPage({ params }: { params: { slug: string } }) {
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
           <ul className="space-y-4">
-            {config.repos.map((repo) => (
-              <Repo key={repo.name} repo={repo} config={config} />
+            {fansub.repos.map((repo) => (
+              <Repo key={repo.name} repo={repo} fansub={fansub} />
             ))}
           </ul>
         </div>
@@ -140,7 +140,7 @@ function SocialLink({
   )
 }
 
-function Repo({ repo, config }: { repo: IRepo; config: Fansub }) {
+function Repo({ repo, fansub }: { repo: IRepo; fansub: Fansub }) {
   return (
     <li>
       <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
@@ -164,7 +164,7 @@ function Repo({ repo, config }: { repo: IRepo; config: Fansub }) {
         </a>
       </h3>
       <ul>
-        {config.subtitleDirs[`${repo.owner}/${repo.name}`]?.map((sd) => (
+        {fansub.subtitleDirs[`${repo.owner}/${repo.name}`]?.map((sd) => (
           <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
         ))}
       </ul>
