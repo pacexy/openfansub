@@ -36,7 +36,7 @@ export default function RootLayout({
         <Providers>
           <header className="flex h-16 items-center justify-between px-4">
             OpenFansub
-            <Search fansubConfigs={fansubs} />
+            <Search fansubs={fansubs} />
           </header>
           {children}
         </Providers>
