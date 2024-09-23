@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'lksub',
   name: 'LKSUB',
   status: 'inactive',
@@ -12,6 +12,4 @@ const config = {
     },
   ],
   links: {},
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition

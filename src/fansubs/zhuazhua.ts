@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'zhuazhua',
   name: '爪爪字幕组',
   status: 'inactive',
@@ -20,6 +20,4 @@ const config = {
   links: {
     website: 'https://zhuazhua.ga',
   },
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition

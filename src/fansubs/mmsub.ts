@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'mmsub',
   name: '咪梦动漫组',
   status: 'inactive',
@@ -16,6 +16,4 @@ const config = {
     twitter: 'https://twitter.com/MiMengSub',
     weibo: 'https://www.weibo.com/MiMengSub',
   },
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition

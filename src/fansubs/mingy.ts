@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'mingy',
   name: 'MingY',
   repos: [
@@ -15,6 +15,4 @@ const config = {
     telegram: 'https://t.me/MingYSub',
     qq: 'https://jq.qq.com/?_wv=1027&k=M7BTPKx4',
   },
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition

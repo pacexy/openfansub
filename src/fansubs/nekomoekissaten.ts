@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'nekomoekissaten',
   name: '喵萌奶茶屋',
   repos: [
@@ -13,6 +13,4 @@ const config = {
   links: {
     project: 'https://github.com/orgs/Nekomoekissaten-SUB/projects/1',
   },
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition
