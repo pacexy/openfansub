@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'billionmetalab',
   name: '亿次研同好会',
   avatar: 'https://avatars.githubusercontent.com/u/96037629?v=4',
@@ -16,6 +16,4 @@ const config = {
     telegram: 'https://t.me/Billion_Meta_Lab',
     email: 'mailto:billionmetalab@gmail.com',
   },
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition

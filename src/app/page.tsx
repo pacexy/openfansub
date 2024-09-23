@@ -1,4 +1,4 @@
-import { fansubConfigs } from '~/lib/fansub'
+import { fansubs } from '~/lib/fansub'
 import Link from 'next/link'
 
 export default function Home() {
@@ -6,7 +6,7 @@ export default function Home() {
     <div>
       <nav>
         <ul>
-          {fansubConfigs.map((fansub) => (
+          {fansubs.map((fansub) => (
             <li key={fansub.slug}>
               <Link href={`/fansub/${fansub.slug}`}>{fansub.name}</Link>
             </li>

@@ -9,36 +9,55 @@ export interface ISubtitlesDir {
   subtitles: string[]
 }
 
-export interface FansubConfig {
+export interface FansubDefinition {
+  /** Unique identifier for the fansub */
   slug: string
+  /** Name of the fansub */
   name: string
+  /** Current status of the fansub */
   status?: 'active' | 'inactive'
+  /** Brief description of the fansub */
   description?: string
+  /** URL of the fansub's avatar */
   avatar?: string
+  /** Array of GitHub repositories associated with the fansub */
   repos: IRepo[]
+  /** Various social media and contact links for the fansub */
   links: {
+    /** Official website URL */
     website?: string
+    /** Project management or tracking URL */
     project?: string
+    /** Telegram group or channel URL */
     telegram?: string
+    /** QQ group URL or identifier */
     qq?: string
+    /** Bilibili profile URL */
     bilibili?: string
+    /** Twitter profile URL */
     twitter?: string
+    /** Weibo profile URL */
     weibo?: string
+    /** Contact email address */
     email?: string
+    /** Sponsorship or donation URL */
     sponsor?: string
   }
+  /** Configuration for subtitle file handling */
   subtitle?: {
     /**
+     * Array of file extensions or regular expressions to identify subtitle files
      * @default ['.srt', '.ass']
      */
     exts?: Array<string | RegExp>
   }
-  subtitleDirs?: {
+}
+
+export interface Fansub extends Omit<FansubDefinition, 'subtitle'> {
+  subtitleDirs: {
     [repo: string]: ISubtitlesDir[]
   }
 }
-
-// TODO: impl defineConfig
 
 const defaultSubtitleExts = ['.srt', '.ass']
 
@@ -85,24 +104,38 @@ export function getSubtitleDirs(
   )
 }
 
-const fansubFiles = await readdir('./src/fansubs')
-export const fansubs = fansubFiles.map((file) => file.replace(/\.ts$/, ''))
+async function resolveFansub(fansub: FansubDefinition): Promise<Fansub> {
+  const subtitleDirs: Fansub['subtitleDirs'] = {}
 
-export const fansubConfigs: FansubConfig[] = await Promise.all(
-  fansubs.map(async (fansub) => {
-    const config: FansubConfig = (await import(`../fansubs/${fansub}`)).default
-    await Promise.all(
-      config.repos.map(async (repo) => {
-        const { files } = await fetchRepoFiles(repo)
-        config.subtitleDirs ??= {}
-        config.subtitleDirs[`${repo.owner}/${repo.name}`] = getSubtitleDirs(
-          files,
-          config.subtitle?.exts,
-        )
-      }),
-    )
-    // TODO: `config.subtitle` is unnecessary in output
-    config.subtitle = undefined
-    return config
-  }),
-)
+  await Promise.all(
+    fansub.repos.map(async (repo) => {
+      const { files } = await fetchRepoFiles(repo)
+      subtitleDirs[`${repo.owner}/${repo.name}`] = getSubtitleDirs(
+        files,
+        fansub.subtitle?.exts,
+      )
+    }),
+  )
+
+  // [RegExp] is not supported to pass to client client.
+  // Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+  delete fansub.subtitle
+
+  return {
+    ...fansub,
+    subtitleDirs,
+  }
+}
+
+async function resolveFansubs() {
+  return await Promise.all(
+    fansubSlugs.map(async (slug) => {
+      const mod = await import(`../fansubs/${slug}`)
+      return resolveFansub(mod.default)
+    }),
+  )
+}
+
+const fansubFiles = await readdir('./src/fansubs')
+export const fansubSlugs = fansubFiles.map((f) => f.replace(/\.ts$/, ''))
+export const fansubs = await resolveFansubs()

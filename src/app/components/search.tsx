@@ -1,11 +1,11 @@
 'use client'
 
 import { Input } from '~/components/ui/input'
-import type { FansubConfig } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import { useState } from 'react'
 
-export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
+export function Search({ fansubs }: { fansubs: Fansub[] }) {
   const [keyword, setKeyword] = useState('')
   const reg = new RegExp(keyword, 'i')
 
@@ -30,15 +30,14 @@ export function Search({ fansubConfigs }: { fansubConfigs: FansubConfig[] }) {
             'hidden',
           )}
         >
-          {fansubConfigs.map((config) =>
-            // TODO: remove !
-            Object.values(config.subtitleDirs!).map((dirs) =>
+          {fansubs.map((fansub) =>
+            Object.values(fansub.subtitleDirs).map((dirs) =>
               dirs
                 .filter((dir) => reg.test(dir.path))
                 .map((dir) => (
                   <li key={dir.path}>
                     <span className="mr-2 bg-muted px-1 py-0.5 text-sm text-muted-foreground">
-                      {config.name}
+                      {fansub.name}
                     </span>
                     <a
                       className="text-foreground"

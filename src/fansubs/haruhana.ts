@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'haruhana',
   name: '❀拨雪寻春❀',
   description:
@@ -24,6 +24,4 @@ const config = {
   subtitle: {
     exts: [/\[Subtitles\]\.7z$/],
   },
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition

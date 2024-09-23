@@ -1,6 +1,6 @@
-import type { FansubConfig } from '~/lib/fansub'
+import type { FansubDefinition } from '~/lib/fansub'
 
-const config = {
+export default {
   slug: 'xksub',
   name: '星空字幕组',
   avatar:
@@ -16,6 +16,4 @@ const config = {
     bilibili: 'https://space.bilibili.com/237288712',
     sponsor: 'https://afdian.net/a/XKsub',
   },
-} satisfies FansubConfig
-
-export default config
+} satisfies FansubDefinition
