@@ -10,25 +10,43 @@ export interface ISubtitlesDir {
 }
 
 export interface FansubConfig {
+  /** Unique identifier for the fansub */
   slug: string
+  /** Name of the fansub */
   name: string
+  /** Current status of the fansub */
   status?: 'active' | 'inactive'
+  /** Brief description of the fansub */
   description?: string
+  /** URL of the fansub's avatar */
   avatar?: string
+  /** Array of GitHub repositories associated with the fansub */
   repos: IRepo[]
+  /** Various social media and contact links for the fansub */
   links: {
+    /** Official website URL */
     website?: string
+    /** Project management or tracking URL */
     project?: string
+    /** Telegram group or channel URL */
     telegram?: string
+    /** QQ group URL or identifier */
     qq?: string
+    /** Bilibili profile URL */
     bilibili?: string
+    /** Twitter profile URL */
     twitter?: string
+    /** Weibo profile URL */
     weibo?: string
+    /** Contact email address */
     email?: string
+    /** Sponsorship or donation URL */
     sponsor?: string
   }
+  /** Configuration for subtitle file handling */
   subtitle?: {
     /**
+     * Array of file extensions or regular expressions to identify subtitle files
      * @default ['.srt', '.ass']
      */
     exts?: Array<string | RegExp>
