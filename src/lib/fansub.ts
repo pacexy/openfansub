@@ -117,6 +117,10 @@ async function resolveFansub(fansub: FansubDefinition): Promise<Fansub> {
     }),
   )
 
+  // [RegExp] is not supported to pass to client client.
+  // Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
+  delete fansub.subtitle
+
   return {
     ...fansub,
     subtitleDirs,
