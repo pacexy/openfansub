@@ -127,10 +127,15 @@ async function resolveFansub(fansub: FansubDefinition): Promise<Fansub> {
   }
 }
 
-export async function fetchFansub(slug: string) {
+async function importFansub(slug: string) {
   const mod = await import(`../fansubs/${slug}`)
-  return resolveFansub(mod.default)
+  return mod.default as FansubDefinition
+}
+
+export async function fetchFansub(slug: string) {
+  return resolveFansub(await importFansub(slug))
 }
 
 const fansubFiles = await readdir('./src/fansubs')
 export const fansubSlugs = fansubFiles.map((f) => f.replace(/\.ts$/, ''))
+export const fansubDefs = await Promise.all(fansubSlugs.map(importFansub))
