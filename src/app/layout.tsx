@@ -1,10 +1,8 @@
 import './globals.css'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { Providers } from '~/app/components/providers'
-import { Search } from '~/app/components/search'
 import { TailwindIndicator } from '~/app/components/tailwind-indicator'
 import { Toaster } from '~/components/ui/sonner'
-import { fansubs } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
@@ -36,7 +34,7 @@ export default function RootLayout({
         <Providers>
           <header className="flex h-16 items-center justify-between px-4">
             OpenFansub
-            <Search fansubs={fansubs} />
+            {/* <Search fansubs={fansubs} /> */}
           </header>
           {children}
         </Providers>

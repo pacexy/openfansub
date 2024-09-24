@@ -1,7 +1,7 @@
 import { Button } from '~/components/ui/button'
 import {
-  fansubs,
   fansubSlugs,
+  fetchFansub,
   type Fansub,
   type ISubtitlesDir,
 } from '~/lib/fansub'
@@ -46,12 +46,12 @@ function formatLink(platform: keyof Fansub['links'], fansub: Fansub) {
   }[platform]
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string }
-}): Metadata {
-  const fansub = fansubs.find((c) => c.slug === params.slug)!
+}): Promise<Metadata> {
+  const fansub = await fetchFansub(params.slug)
   return {
     title: fansub.name,
     description: fansub.description,
@@ -63,8 +63,12 @@ export async function generateStaticParams() {
   return fansubSlugs.map((slug) => ({ slug }))
 }
 
-export default function FansubPage({ params }: { params: { slug: string } }) {
-  const fansub = fansubs.find((c) => c.slug === params.slug)!
+export default async function FansubPage({
+  params,
+}: {
+  params: { slug: string }
+}) {
+  const fansub = await fetchFansub(params.slug)
   return (
     <div className="container mx-auto px-4 py-8">
       <Link href="/" className="mb-4 inline-block">

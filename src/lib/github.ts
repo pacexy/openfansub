@@ -16,6 +16,7 @@ export async function fetchRepoFiles(repo: IRepo): Promise<{
   files: IRepoFile[]
 }> {
   const url = `https://ungh.cc/repos/${repo.owner}/${repo.name}/files/${repo.branch}`
+  console.log(`[github] fetch: ${url}`)
   const response = await fetch(url)
   return await response.json()
 }
