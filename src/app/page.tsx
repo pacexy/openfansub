@@ -1,7 +1,9 @@
-import { fansubDefs } from '~/lib/fansub'
+import { fansubSlugs, importFansub } from '~/lib/fansub'
 import Link from 'next/link'
 
-export default function Home() {
+export default async function Home() {
+  const fansubDefs = await Promise.all(fansubSlugs.map(importFansub))
+
   return (
     <div>
       <nav>
