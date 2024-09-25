@@ -2,15 +2,15 @@ import { fansubSlugs, importFansub } from '~/lib/fansub'
 import Link from 'next/link'
 
 export default async function Home() {
-  const fansubs = await Promise.all(fansubSlugs.map(importFansub))
-
   return (
     <div>
       <nav>
         <ul>
-          {fansubs.map((fansub) => (
-            <li key={fansub.slug}>
-              <Link href={`/fansub/${fansub.slug}`}>{fansub.name}</Link>
+          {fansubSlugs.map(async (slug) => (
+            <li key={slug}>
+              <Link href={`/fansub/${slug}`}>
+                {(await importFansub(slug)).name}
+              </Link>
             </li>
           ))}
         </ul>
