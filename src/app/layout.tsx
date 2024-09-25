@@ -4,7 +4,7 @@ import { Providers } from '~/app/components/providers'
 import { Search } from '~/app/components/search'
 import { TailwindIndicator } from '~/app/components/tailwind-indicator'
 import { Toaster } from '~/components/ui/sonner'
-import { fansubs } from '~/lib/fansub'
+import { fansubSlugs, fetchFansub } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
@@ -25,11 +25,12 @@ export const metadata: Metadata = {
   description: '[description]',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const fansubs = await Promise.all(fansubSlugs.map(fetchFansub))
   return (
     <html lang="en">
       <body className={cn('font-sans', fontSans.variable)}>
