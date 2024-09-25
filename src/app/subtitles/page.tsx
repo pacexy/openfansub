@@ -1,7 +1,13 @@
 import { Subtitles } from '~/components/subtitles'
 import { fansubSlugs } from '~/lib/fansub'
+import type { Metadata } from 'next'
 
-export default async function Home() {
+export const metadata: Metadata = {
+  title: 'Subtitles',
+  description: 'All subtitle files of fansubs.',
+}
+
+export default async function SubtitlesPage() {
   return (
     <div>
       {fansubSlugs.map((slug) => (
