@@ -9,7 +9,7 @@ export interface ISubtitlesDir {
   subtitles: string[]
 }
 
-export interface FansubDefinition {
+export interface Fansub {
   /** Unique identifier for the fansub */
   slug: string
   /** Name of the fansub */
@@ -100,7 +100,7 @@ export function getSubtitleDirs(
 
 export async function importFansub(slug: string) {
   const mod = await import(`../fansubs/${slug}`)
-  return mod.default as FansubDefinition
+  return mod.default as Fansub
 }
 
 const fansubFiles = await readdir('./src/fansubs')

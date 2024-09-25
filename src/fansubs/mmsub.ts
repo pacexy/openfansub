@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'mmsub',
@@ -16,4 +16,4 @@ export default {
     twitter: 'https://twitter.com/MiMengSub',
     weibo: 'https://www.weibo.com/MiMengSub',
   },
-} satisfies FansubDefinition
+} satisfies Fansub

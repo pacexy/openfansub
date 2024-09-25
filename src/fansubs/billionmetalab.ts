@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'billionmetalab',
@@ -16,4 +16,4 @@ export default {
     telegram: 'https://t.me/Billion_Meta_Lab',
     email: 'mailto:billionmetalab@gmail.com',
   },
-} satisfies FansubDefinition
+} satisfies Fansub

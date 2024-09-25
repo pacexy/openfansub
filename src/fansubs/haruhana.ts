@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'haruhana',
@@ -24,4 +24,4 @@ export default {
   subtitle: {
     exts: [/\[Subtitles\]\.7z$/],
   },
-} satisfies FansubDefinition
+} satisfies Fansub

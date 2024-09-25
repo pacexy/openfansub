@@ -1,7 +1,7 @@
 import {
   getSubtitleDirs,
   importFansub,
-  type FansubDefinition,
+  type Fansub,
   type ISubtitlesDir,
 } from '~/lib/fansub'
 import { fetchRepoFiles, type IRepo } from '~/lib/github'
@@ -18,13 +18,7 @@ export async function Subtitles({ slug }: { slug: string }) {
   )
 }
 
-async function Repo({
-  repo,
-  fansub,
-}: {
-  repo: IRepo
-  fansub: FansubDefinition
-}) {
+async function Repo({ repo, fansub }: { repo: IRepo; fansub: Fansub }) {
   const { files } = await fetchRepoFiles(repo)
   const subtitleDirs = getSubtitleDirs(files, fansub.subtitle?.exts)
   return (

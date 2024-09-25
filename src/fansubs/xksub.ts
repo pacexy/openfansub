@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'xksub',
@@ -16,4 +16,4 @@ export default {
     bilibili: 'https://space.bilibili.com/237288712',
     sponsor: 'https://afdian.net/a/XKsub',
   },
-} satisfies FansubDefinition
+} satisfies Fansub

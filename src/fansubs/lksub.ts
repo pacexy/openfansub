@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'lksub',
@@ -12,4 +12,4 @@ export default {
     },
   ],
   links: {},
-} satisfies FansubDefinition
+} satisfies Fansub

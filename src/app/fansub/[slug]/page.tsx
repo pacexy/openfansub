@@ -1,6 +1,6 @@
 import { Subtitles } from '~/components/subtitles'
 import { Button } from '~/components/ui/button'
-import { fansubSlugs, importFansub, type FansubDefinition } from '~/lib/fansub'
+import { fansubSlugs, importFansub, type Fansub } from '~/lib/fansub'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -24,10 +24,7 @@ const icons = {
   sponsor: SiGithubsponsors,
 }
 
-function formatLink(
-  platform: keyof FansubDefinition['links'],
-  fansub: FansubDefinition,
-) {
+function formatLink(platform: keyof Fansub['links'], fansub: Fansub) {
   const url = new URL(fansub.links[platform]!)
   const path = url.pathname.replace('/', '')
 
