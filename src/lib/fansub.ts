@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 import { readdir } from 'node:fs/promises'
-import { fetchRepoFiles, type IRepo, type IRepoFile } from './github'
+import { type IRepo, type IRepoFile } from './github'
 
 export interface ISubtitlesDir {
   name: string
@@ -104,36 +104,9 @@ export function getSubtitleDirs(
   )
 }
 
-async function resolveFansub(fansub: FansubDefinition): Promise<Fansub> {
-  const subtitleDirs: Fansub['subtitleDirs'] = {}
-
-  await Promise.all(
-    fansub.repos.map(async (repo) => {
-      const { files } = await fetchRepoFiles(repo)
-      subtitleDirs[`${repo.owner}/${repo.name}`] = getSubtitleDirs(
-        files,
-        fansub.subtitle?.exts,
-      )
-    }),
-  )
-
-  // [RegExp] is not supported to pass to client client.
-  // Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.
-  delete fansub.subtitle
-
-  return {
-    ...fansub,
-    subtitleDirs,
-  }
-}
-
 export async function importFansub(slug: string) {
   const mod = await import(`../fansubs/${slug}`)
   return mod.default as FansubDefinition
-}
-
-export async function fetchFansub(slug: string) {
-  return resolveFansub(await importFansub(slug))
 }
 
 const fansubFiles = await readdir('./src/fansubs')

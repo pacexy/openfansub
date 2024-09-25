@@ -1,9 +1,14 @@
-import { fetchFansub, type Fansub, type ISubtitlesDir } from '~/lib/fansub'
-import type { IRepo } from '~/lib/github'
+import {
+  getSubtitleDirs,
+  importFansub,
+  type FansubDefinition,
+  type ISubtitlesDir,
+} from '~/lib/fansub'
+import { fetchRepoFiles, type IRepo } from '~/lib/github'
 import { GoRepo } from 'react-icons/go'
 
 export async function Subtitles({ slug }: { slug: string }) {
-  const fansub = await fetchFansub(slug)
+  const fansub = await importFansub(slug)
   return (
     <ul className="space-y-4">
       {fansub.repos.map((repo) => (
@@ -13,7 +18,15 @@ export async function Subtitles({ slug }: { slug: string }) {
   )
 }
 
-function Repo({ repo, fansub }: { repo: IRepo; fansub: Fansub }) {
+async function Repo({
+  repo,
+  fansub,
+}: {
+  repo: IRepo
+  fansub: FansubDefinition
+}) {
+  const { files } = await fetchRepoFiles(repo)
+  const subtitleDirs = getSubtitleDirs(files, fansub.subtitle?.exts)
   return (
     <li>
       <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
@@ -37,7 +50,7 @@ function Repo({ repo, fansub }: { repo: IRepo; fansub: Fansub }) {
         </a>
       </h3>
       <ul>
-        {fansub.subtitleDirs[`${repo.owner}/${repo.name}`]?.map((sd) => (
+        {subtitleDirs.map((sd) => (
           <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
         ))}
       </ul>
