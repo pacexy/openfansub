@@ -53,12 +53,6 @@ export interface FansubDefinition {
   }
 }
 
-export interface Fansub extends Omit<FansubDefinition, 'subtitle'> {
-  subtitleDirs: {
-    [repo: string]: ISubtitlesDir[]
-  }
-}
-
 const defaultSubtitleExts = ['.srt', '.ass']
 
 export function getSubtitleDirs(
