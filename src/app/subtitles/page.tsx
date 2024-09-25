@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default async function SubtitlesPage() {
   return (
-    <div>
+    <div className="space-y-8">
       {fansubSlugs.map((slug) => (
         <Subtitles key={slug} slug={slug} />
       ))}
