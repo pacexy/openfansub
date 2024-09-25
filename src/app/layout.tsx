@@ -35,8 +35,8 @@ export default async function RootLayout({
         <Providers>
           <header className="flex h-16 items-center justify-between px-4">
             OpenFansub
+            <Link href="/subtitles">Subtitles</Link>
           </header>
-          <Link href="/subtitles">Subtitles</Link>
           {children}
         </Providers>
         <Toaster />
