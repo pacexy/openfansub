@@ -61,16 +61,26 @@ export function getSubtitleDirs(
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
-    let match: RegExpExecArray | null = null
-    const matchingExt = exts.find((e) => (match = e.exec(item.path)) !== null)
-    if (!matchingExt || !match) continue
+    // Find the first matching extension regex
+    const matchingExt = exts.find((regex) => regex.test(item.path))
+    if (!matchingExt) continue
+
+    // Extract the subtitle path using the matching regex
+    const match = matchingExt.exec(item.path)
+    if (!match || !match[1]) continue
 
     const subtitlePath = match[1]
-    if (!subtitlePath) continue
-
     const fullPath = item.path
-    const parentPath = fullPath.slice(0, -subtitlePath.length - 1)
+
+    // Calculate the parent directory path
+    const parentPath = fullPath
+      .slice(0, -subtitlePath.length)
+      .replace(/\/$/, '')
+
+    // Split the parent path into parts
     const parts = parentPath.split('/')
+
+    // Get the immediate directory name and its parent
     const dirName = parts.pop() || ''
     const parent = parts.join('/')
 
