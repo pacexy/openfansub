@@ -1,4 +1,4 @@
-import type { Fansub } from '~/lib/fansub'
+import { defaultSubtitlePattern, type Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'lksub',
@@ -13,6 +13,6 @@ export default {
   ],
   links: {},
   subtitle: {
-    patterns: [/\/((?:\d+\/)?[^/]+\.(?:ass|srt))$/],
+    patterns: [/\/(\d+\/[^/]+\.(?:ass|srt))$/, defaultSubtitlePattern],
   },
 } satisfies Fansub

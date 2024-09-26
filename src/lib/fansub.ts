@@ -52,11 +52,11 @@ export interface Fansub {
   }
 }
 
-const defaultSubtitlePatterns = [/([^/]+\.(?:srt|ass))$/]
+export const defaultSubtitlePattern = /([^/]+\.(?:srt|ass))$/
 
 export function getSubtitleDirs(
   files: IRepoFile[],
-  patterns: Array<RegExp> = defaultSubtitlePatterns,
+  patterns: Array<RegExp> = [defaultSubtitlePattern],
 ): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
