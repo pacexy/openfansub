@@ -2,7 +2,7 @@ import { readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { type IRepo, type IRepoFile } from './github'
 
-export interface ISubtitlesDir {
+export interface IAnimeDir {
   name: string
   path: string
   parent?: string
@@ -10,8 +10,8 @@ export interface ISubtitlesDir {
 
 export interface ISubtitlesRepo extends IRepo {
   /**
-   * Array of patterns to specify where subtitle directories are located.
-   * Directories under an entry will be considered as subtitle directories.
+   * Array of patterns to specify where anime directories are located.
+   * Directories under an entry will be considered as anime directories.
    *
    * If not provided or empty, the root directory will be used.
    *
@@ -56,11 +56,11 @@ export interface Fansub {
   }
 }
 
-export function getSubtitleDirs(
+export function getAnimeDirs(
   files: IRepoFile[],
   entries: ISubtitlesRepo['entries'] = [''],
-): ISubtitlesDir[] {
-  const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
+): IAnimeDir[] {
+  const animeDirs: Map<string, IAnimeDir> = new Map()
 
   for (const item of files) {
     const entry = entries.find((entry) =>
@@ -82,8 +82,8 @@ export function getSubtitleDirs(
     const dirName = parts[0]
     const dirPath = join(entryPath, dirName)
 
-    if (!subtitleDirs.has(dirPath)) {
-      subtitleDirs.set(dirPath, {
+    if (!animeDirs.has(dirPath)) {
+      animeDirs.set(dirPath, {
         path: dirPath,
         name: dirName,
         parent: entryPath,
@@ -91,7 +91,7 @@ export function getSubtitleDirs(
     }
   }
 
-  return Array.from(subtitleDirs.values()).sort((a, b) =>
+  return Array.from(animeDirs.values()).sort((a, b) =>
     a.path.localeCompare(b.path),
   )
 }

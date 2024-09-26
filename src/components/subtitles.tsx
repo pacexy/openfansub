@@ -1,7 +1,7 @@
 import {
-  getSubtitleDirs,
+  getAnimeDirs,
   importFansub,
-  type ISubtitlesDir,
+  type IAnimeDir,
   type ISubtitlesRepo,
 } from '~/lib/fansub'
 import { fetchRepoFiles, type IRepo } from '~/lib/github'
@@ -20,7 +20,7 @@ export async function Subtitles({ slug }: { slug: string }) {
 
 async function Repo({ repo }: { repo: ISubtitlesRepo }) {
   const { files } = await fetchRepoFiles(repo)
-  const subtitleDirs = getSubtitleDirs(files, repo.entries)
+  const animeDirs = getAnimeDirs(files, repo.entries)
   return (
     <li>
       <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
@@ -44,34 +44,28 @@ async function Repo({ repo }: { repo: ISubtitlesRepo }) {
         </a>
       </h3>
       <ul>
-        {subtitleDirs.map((sd) => (
-          <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
+        {animeDirs.map((ad) => (
+          <AnimeDir key={ad.path} repo={repo} animeDir={ad} />
         ))}
       </ul>
     </li>
   )
 }
 
-function SubtitlesDir({
-  repo,
-  subtitleDir: sd,
-}: {
-  repo: IRepo
-  subtitleDir: ISubtitlesDir
-}) {
+function AnimeDir({ repo, animeDir }: { repo: IRepo; animeDir: IAnimeDir }) {
   return (
     <li>
       <h3 className="text-lg">
-        {sd.parent && (
-          <span className="text-muted-foreground">{sd.parent}/</span>
+        {animeDir.parent && (
+          <span className="text-muted-foreground">{animeDir.parent}/</span>
         )}
         <a
-          href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${sd.path}`}
+          href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${animeDir.path}`}
           className="text-blue-600 hover:text-blue-800"
           target="_blank"
           rel="noopener noreferrer"
         >
-          {sd.name}
+          {animeDir.name}
         </a>
       </h3>
     </li>
