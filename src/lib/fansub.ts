@@ -62,28 +62,25 @@ export function getAnimeDirs(
 ): IAnimeDir[] {
   const animeDirs: IAnimeDir[] = []
 
-  for (const item of files) {
+  for (const f of files) {
     const last = animeDirs[animeDirs.length - 1]
 
     // Skip if the anime dir is already in the list
-    if (last && item.path.startsWith(last.path)) continue
+    if (last && f.path.startsWith(last.path)) continue
 
-    const entry = entries.find((entry) =>
-      typeof entry === 'string'
-        ? item.path.startsWith(entry)
-        : entry.test(item.path),
+    const entry = entries.find((e) =>
+      typeof e === 'string' ? f.path.startsWith(e) : e.test(f.path),
     )
 
     // Skip if the file is not in any entry
     if (entry === undefined) continue
 
     const entryPath =
-      typeof entry === 'string' ? entry : item.path.match(entry)![1]
-
-    const restPath = item.path.slice(entryPath.length).replace(/^\//, '')
+      typeof entry === 'string' ? entry : f.path.match(entry)![1]
+    const restPath = f.path.slice(entryPath.length).replace(/^\//, '')
     const parts = restPath.split('/')
 
-    // Skip if the path is not a directory
+    // Skip if the file is not a directory
     if (parts.length === 1) continue
 
     const dirName = parts[0]
