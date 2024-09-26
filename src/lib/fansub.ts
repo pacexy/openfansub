@@ -6,7 +6,6 @@ export interface ISubtitlesDir {
   name: string
   path: string
   parent?: string
-  subtitles: string[]
 }
 
 export interface Fansub {
@@ -64,7 +63,6 @@ export function getSubtitleDirs(
     if (!entryMatch) continue
 
     const pathParts = item.path.split('/')
-    const fileName = pathParts.pop() || ''
     const animeName = pathParts.pop() || ''
     const dirPath = pathParts.join('/')
 
@@ -75,12 +73,8 @@ export function getSubtitleDirs(
           path: dirPath + '/' + animeName,
           name: animeName,
           parent: dirPath,
-          subtitles: [],
         }
         subtitleDirs.set(dirPath + '/' + animeName, sd)
-      }
-      if (!sd.subtitles.includes(fileName)) {
-        sd.subtitles.push(fileName)
       }
     }
   }
