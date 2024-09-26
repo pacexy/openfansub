@@ -1,5 +1,5 @@
-import assert from 'node:assert'
 import { readdir } from 'node:fs/promises'
+import { join } from 'node:path'
 import { type IRepo, type IRepoFile } from './github'
 
 export interface ISubtitlesDir {
@@ -73,7 +73,7 @@ export function getSubtitleDirs(
     if (parts.length === 1) continue
 
     const dirName = parts[0]
-    const dirPath = entryPath + dirName
+    const dirPath = join(entryPath, dirName)
 
     if (!subtitleDirs.has(dirPath)) {
       subtitleDirs.set(dirPath, {
