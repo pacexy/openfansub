@@ -8,6 +8,7 @@ export default {
       owner: 'MingYSub',
       name: 'SubsArchive',
       branch: 'main',
+      entries: ['Archive'],
     },
   ],
   links: {

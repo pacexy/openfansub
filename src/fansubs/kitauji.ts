@@ -10,6 +10,7 @@ export default {
       owner: 'Kitauji-Sub',
       name: 'Subtitles',
       branch: 'main',
+      entries: ['Movie', 'OVA', /(^TV\/\d{4}\/\d{2})/],
     },
   ],
   links: {

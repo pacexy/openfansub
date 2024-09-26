@@ -9,6 +9,7 @@ export default {
       owner: 'microseventh',
       name: 'BillionMetaLab_AssSubs',
       branch: 'main',
+      entries: [/(^\d{6})/],
     },
   ],
   links: {

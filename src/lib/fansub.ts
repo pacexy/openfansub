@@ -1,12 +1,23 @@
-import assert from 'node:assert'
 import { readdir } from 'node:fs/promises'
+import path from 'node:path'
 import { type IRepo, type IRepoFile } from './github'
 
-export interface ISubtitlesDir {
+export interface IAnimeDir {
   name: string
   path: string
   parent?: string
-  subtitles: string[]
+}
+
+export interface ISubtitlesRepo extends IRepo {
+  /**
+   * Array of patterns to specify where anime directories are located.
+   * Directories under an entry will be considered as anime directories.
+   *
+   * If not provided or empty, the root directory will be used.
+   *
+   * @default ['']
+   */
+  entries?: Array<string | RegExp>
 }
 
 export interface Fansub {
@@ -21,7 +32,7 @@ export interface Fansub {
   /** URL of the fansub's avatar */
   avatar?: string
   /** Array of GitHub repositories associated with the fansub */
-  repos: IRepo[]
+  repos: ISubtitlesRepo[]
   /** Various social media and contact links for the fansub */
   links: {
     /** Official website URL */
@@ -43,64 +54,46 @@ export interface Fansub {
     /** Sponsorship or donation URL */
     sponsor?: string
   }
-  /** Configuration for subtitle file handling */
-  subtitle?: {
-    /**
-     * Array of regular expressions to identify subtitle files
-     * @default [/\/([^/]+\.ass)$/]
-     */
-    patterns?: Array<RegExp>
-  }
 }
 
-export const defaultSubtitlePattern = /\/([^/]+\.ass)$/
-
-export function getSubtitleDirs(
+export function getAnimeDirs(
   files: IRepoFile[],
-  patterns: Array<RegExp> = [defaultSubtitlePattern],
-): ISubtitlesDir[] {
-  const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
+  entries: ISubtitlesRepo['entries'] = [''],
+): IAnimeDir[] {
+  const animeDirs: IAnimeDir[] = []
 
-  for (const item of files) {
-    // Find the first matching pattern regex
-    const matchingPattern = patterns.find((regex) => regex.test(item.path))
-    if (!matchingPattern) continue
+  for (const f of files) {
+    const last = animeDirs[animeDirs.length - 1]
 
-    // Extract the subtitle path using the matching regex
-    const match = matchingPattern.exec(item.path)
-    if (!match || !match[1]) continue
+    // Skip if the anime dir is already in the list
+    if (last && f.path.startsWith(last.path)) continue
 
-    const subtitleRelativePath = match[1]
-    const fullPath = item.path
+    const entry = entries.find((e) =>
+      typeof e === 'string' ? f.path.startsWith(e) : e.test(f.path),
+    )
 
-    // Calculate the parent directory path
-    const dirPath = fullPath
-      .slice(0, -subtitleRelativePath.length)
-      .replace(/\/$/, '')
+    // Skip if the file is not in any entry
+    if (entry === undefined) continue
 
-    // Split the parent path into parts
-    const parts = dirPath.split('/')
+    const entryPath =
+      typeof entry === 'string' ? entry : f.path.match(entry)![1]
+    const restPath = f.path.slice(entryPath.length).replace(/^\//, '')
+    const parts = restPath.split('/')
 
-    // Get the immediate directory name and its parent
-    const dirName = parts.pop() || ''
-    const parentPath = parts.join('/')
+    // Skip if the file is not a directory
+    if (parts.length === 1) continue
 
-    let sd = subtitleDirs.get(dirPath)
-    if (!sd) {
-      sd = {
-        path: dirPath,
-        name: dirName,
-        parent: parentPath,
-        subtitles: [],
-      }
-      subtitleDirs.set(dirPath, sd)
-    }
-    sd.subtitles.push(subtitleRelativePath)
+    const dirName = parts[0]
+    const dirPath = path.posix.join(entryPath, dirName)
+
+    animeDirs.push({
+      path: dirPath,
+      name: dirName,
+      parent: entryPath,
+    })
   }
 
-  return Array.from(subtitleDirs.values()).sort((a, b) =>
-    a.path.localeCompare(b.path),
-  )
+  return animeDirs
 }
 
 export async function importFansub(slug: string) {
