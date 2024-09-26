@@ -46,27 +46,27 @@ export interface Fansub {
   /** Configuration for subtitle file handling */
   subtitle?: {
     /**
-     * Array of file extensions or regular expressions to identify subtitle files
+     * Array of regular expressions to identify subtitle files
      */
-    exts?: Array<RegExp>
+    patterns?: Array<RegExp>
   }
 }
 
-const defaultSubtitleExts = [/([^/]+\.(?:srt|ass))$/]
+const defaultSubtitlePatterns = [/([^/]+\.(?:srt|ass))$/]
 
 export function getSubtitleDirs(
   files: IRepoFile[],
-  exts: Array<RegExp> = defaultSubtitleExts,
+  patterns: Array<RegExp> = defaultSubtitlePatterns,
 ): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
-    // Find the first matching extension regex
-    const matchingExt = exts.find((regex) => regex.test(item.path))
-    if (!matchingExt) continue
+    // Find the first matching pattern regex
+    const matchingPattern = patterns.find((regex) => regex.test(item.path))
+    if (!matchingPattern) continue
 
     // Extract the subtitle path using the matching regex
-    const match = matchingExt.exec(item.path)
+    const match = matchingPattern.exec(item.path)
     if (!match || !match[1]) continue
 
     const subtitlePath = match[1]

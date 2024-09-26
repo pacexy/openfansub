@@ -20,7 +20,7 @@ export async function Subtitles({ slug }: { slug: string }) {
 
 async function Repo({ repo, fansub }: { repo: IRepo; fansub: Fansub }) {
   const { files } = await fetchRepoFiles(repo)
-  const subtitleDirs = getSubtitleDirs(files, fansub.subtitle?.exts)
+  const subtitleDirs = getSubtitleDirs(files, fansub.subtitle?.patterns)
   return (
     <li>
       <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
