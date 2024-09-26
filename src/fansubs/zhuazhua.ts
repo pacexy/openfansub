@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'zhuazhua',
@@ -20,4 +20,4 @@ export default {
   links: {
     website: 'https://zhuazhua.ga',
   },
-} satisfies FansubDefinition
+} satisfies Fansub

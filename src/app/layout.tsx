@@ -1,13 +1,12 @@
 import './globals.css'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { Providers } from '~/app/components/providers'
-import { Search } from '~/app/components/search'
 import { TailwindIndicator } from '~/app/components/tailwind-indicator'
 import { Toaster } from '~/components/ui/sonner'
-import { fansubSlugs, fetchFansub } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
+import Link from 'next/link'
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
@@ -30,14 +29,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const fansubs = await Promise.all(fansubSlugs.map(fetchFansub))
   return (
     <html lang="en">
-      <body className={cn('font-sans', fontSans.variable)}>
+      <body className={cn('container font-sans', fontSans.variable)}>
         <Providers>
-          <header className="flex h-16 items-center justify-between px-4">
+          <header className="flex h-16 items-center justify-between">
             OpenFansub
-            <Search fansubs={fansubs} />
+            <Link href="/subtitles">Subtitles</Link>
           </header>
           {children}
         </Providers>

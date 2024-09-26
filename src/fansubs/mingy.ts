@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'mingy',
@@ -15,4 +15,4 @@ export default {
     telegram: 'https://t.me/MingYSub',
     qq: 'https://jq.qq.com/?_wv=1027&k=M7BTPKx4',
   },
-} satisfies FansubDefinition
+} satisfies Fansub

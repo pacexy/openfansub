@@ -1,11 +1,6 @@
+import { Subtitles } from '~/components/subtitles'
 import { Button } from '~/components/ui/button'
-import {
-  fansubSlugs,
-  fetchFansub,
-  type Fansub,
-  type ISubtitlesDir,
-} from '~/lib/fansub'
-import type { IRepo } from '~/lib/github'
+import { fansubSlugs, importFansub, type Fansub } from '~/lib/fansub'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -13,7 +8,7 @@ import { createElement } from 'react'
 import type { IconType } from 'react-icons'
 import { FaQq, FaTelegramPlane } from 'react-icons/fa'
 import { FaBilibili, FaWeibo, FaXTwitter } from 'react-icons/fa6'
-import { GoMail, GoRepo, GoReport, GoTable } from 'react-icons/go'
+import { GoMail, GoReport, GoTable } from 'react-icons/go'
 import { LuLink } from 'react-icons/lu'
 import { SiGithubsponsors } from 'react-icons/si'
 
@@ -51,7 +46,7 @@ export async function generateMetadata({
 }: {
   params: { slug: string }
 }): Promise<Metadata> {
-  const fansub = await fetchFansub(params.slug)
+  const fansub = await importFansub(params.slug)
   return {
     title: fansub.name,
     description: fansub.description,
@@ -68,7 +63,7 @@ export default async function FansubPage({
 }: {
   params: { slug: string }
 }) {
-  const fansub = await fetchFansub(params.slug)
+  const fansub = await importFansub(params.slug)
   return (
     <div className="container mx-auto px-4 py-8">
       <Link href="/" className="mb-4 inline-block">
@@ -104,11 +99,7 @@ export default async function FansubPage({
         {/* right */}
         <div className="md:col-span-2">
           <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
-          <ul className="space-y-4">
-            {fansub.repos.map((repo) => (
-              <Repo key={repo.name} repo={repo} fansub={fansub} />
-            ))}
-          </ul>
+          <Subtitles slug={params.slug} />
         </div>
       </div>
     </div>
@@ -140,64 +131,6 @@ function SocialLink({
           {label}
         </a>
       </div>
-    </li>
-  )
-}
-
-function Repo({ repo, fansub }: { repo: IRepo; fansub: Fansub }) {
-  return (
-    <li>
-      <h3 className="mb-2 flex items-center text-sm text-muted-foreground">
-        <GoRepo className="mr-2" size={16} />
-        <a
-          href={`https://github.com/${repo.owner}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          {repo.owner}
-        </a>
-        <span className="mx-1">/</span>
-        <a
-          href={`https://github.com/${repo.owner}/${repo.name}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:underline"
-        >
-          {repo.name}
-        </a>
-      </h3>
-      <ul>
-        {fansub.subtitleDirs[`${repo.owner}/${repo.name}`]?.map((sd) => (
-          <SubtitlesDir key={sd.path} repo={repo} subtitleDir={sd} />
-        ))}
-      </ul>
-    </li>
-  )
-}
-
-function SubtitlesDir({
-  repo,
-  subtitleDir: sd,
-}: {
-  repo: IRepo
-  subtitleDir: ISubtitlesDir
-}) {
-  return (
-    <li>
-      <h3 className="text-lg">
-        {sd.parent && (
-          <span className="text-muted-foreground">{sd.parent}/</span>
-        )}
-        <a
-          href={`https://github.com/${repo.owner}/${repo.name}/tree/${repo.branch}/${sd.path}`}
-          className="text-blue-600 hover:text-blue-800"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {sd.name}
-        </a>
-      </h3>
     </li>
   )
 }

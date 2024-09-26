@@ -1,4 +1,4 @@
-import type { FansubDefinition } from '~/lib/fansub'
+import type { Fansub } from '~/lib/fansub'
 
 export default {
   slug: 'nekomoekissaten',
@@ -13,4 +13,4 @@ export default {
   links: {
     project: 'https://github.com/orgs/Nekomoekissaten-SUB/projects/1',
   },
-} satisfies FansubDefinition
+} satisfies Fansub
