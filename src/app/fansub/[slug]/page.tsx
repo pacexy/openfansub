@@ -1,9 +1,7 @@
 import { Subtitles } from '~/components/subtitles'
-import { Button } from '~/components/ui/button'
 import { fansubSlugs, importFansub, type Fansub } from '~/lib/fansub'
 import { keys } from '~/lib/utils'
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { createElement } from 'react'
 import type { IconType } from 'react-icons'
 import { FaQq, FaTelegramPlane } from 'react-icons/fa'
@@ -65,42 +63,37 @@ export default async function FansubPage({
 }) {
   const fansub = await importFansub(params.slug)
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Link href="/" className="mb-4 inline-block">
-        <Button variant="outline">← Back to Home</Button>
-      </Link>
-      <div className="mt-4 grid grid-cols-1 gap-16 md:grid-cols-3">
-        {/* left */}
-        <div className="md:col-span-1">
-          {fansub.avatar && (
-            <div className="mb-4 aspect-square w-full overflow-hidden rounded-full">
-              <img src={fansub.avatar} alt={fansub.name} className="w-full" />
-            </div>
-          )}
-          <h1 className="mb-2 text-2xl font-bold">{fansub.name}</h1>
-          <p className="mb-4 text-muted-foreground">{fansub.description}</p>
-          <ul className="space-y-3">
-            {keys(fansub.links).map((key) => (
-              <SocialLink
-                key={key}
-                icon={icons[key]}
-                url={fansub.links[key]!}
-                label={formatLink(key, fansub)}
-              />
-            ))}
+    <div className="grid grid-cols-1 gap-16 md:grid-cols-3">
+      {/* left */}
+      <div className="md:col-span-1">
+        {fansub.avatar && (
+          <div className="mb-4 aspect-square w-full overflow-hidden rounded-full">
+            <img src={fansub.avatar} alt={fansub.name} className="w-full" />
+          </div>
+        )}
+        <h1 className="mb-2 text-2xl font-bold">{fansub.name}</h1>
+        <p className="mb-4 text-muted-foreground">{fansub.description}</p>
+        <ul className="space-y-3">
+          {keys(fansub.links).map((key) => (
             <SocialLink
-              icon={GoReport}
-              url={`https://github.com/${fansub.repos[0].owner}/${fansub.repos[0].name}/issues`}
-              label="Feedback"
+              key={key}
+              icon={icons[key]}
+              url={fansub.links[key]!}
+              label={formatLink(key, fansub)}
             />
-          </ul>
-        </div>
+          ))}
+          <SocialLink
+            icon={GoReport}
+            url={`https://github.com/${fansub.repos[0].owner}/${fansub.repos[0].name}/issues`}
+            label="Feedback"
+          />
+        </ul>
+      </div>
 
-        {/* right */}
-        <div className="md:col-span-2">
-          <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
-          <Subtitles slug={params.slug} />
-        </div>
+      {/* right */}
+      <div className="md:col-span-2">
+        <h2 className="mb-4 text-2xl font-bold">Subtitles</h2>
+        <Subtitles slug={params.slug} />
       </div>
     </div>
   )
