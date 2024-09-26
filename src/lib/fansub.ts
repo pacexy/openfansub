@@ -43,59 +43,46 @@ export interface Fansub {
     /** Sponsorship or donation URL */
     sponsor?: string
   }
-  /** Configuration for subtitle file handling */
+  /** Configuration for subtitle directory handling */
   subtitle?: {
     /**
-     * Array of regular expressions to identify subtitle files
-     * @default [/\/([^/]+\.ass)$/]
+     * Array of regular expressions to identify subtitle entry directories
      */
-    patterns?: Array<RegExp>
+    entries: RegExp[]
   }
 }
 
-export const defaultSubtitlePattern = /\/([^/]+\.ass)$/
-
 export function getSubtitleDirs(
   files: IRepoFile[],
-  patterns: Array<RegExp> = [defaultSubtitlePattern],
+  entries: RegExp[],
 ): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
-    // Find the first matching pattern regex
-    const matchingPattern = patterns.find((regex) => regex.test(item.path))
-    if (!matchingPattern) continue
+    // Check if the file is in a subtitle entry directory
+    const entryMatch = entries.some((re) => re.test(item.path))
+    if (!entryMatch) continue
 
-    // Extract the subtitle path using the matching regex
-    const match = matchingPattern.exec(item.path)
-    if (!match || !match[1]) continue
+    const pathParts = item.path.split('/')
+    const fileName = pathParts.pop() || ''
+    const animeName = pathParts.pop() || ''
+    const dirPath = pathParts.join('/')
 
-    const subtitleRelativePath = match[1]
-    const fullPath = item.path
-
-    // Calculate the parent directory path
-    const dirPath = fullPath
-      .slice(0, -subtitleRelativePath.length)
-      .replace(/\/$/, '')
-
-    // Split the parent path into parts
-    const parts = dirPath.split('/')
-
-    // Get the immediate directory name and its parent
-    const dirName = parts.pop() || ''
-    const parentPath = parts.join('/')
-
-    let sd = subtitleDirs.get(dirPath)
-    if (!sd) {
-      sd = {
-        path: dirPath,
-        name: dirName,
-        parent: parentPath,
-        subtitles: [],
+    if (animeName) {
+      let sd = subtitleDirs.get(dirPath + '/' + animeName)
+      if (!sd) {
+        sd = {
+          path: dirPath + '/' + animeName,
+          name: animeName,
+          parent: dirPath,
+          subtitles: [],
+        }
+        subtitleDirs.set(dirPath + '/' + animeName, sd)
       }
-      subtitleDirs.set(dirPath, sd)
+      if (!sd.subtitles.includes(fileName)) {
+        sd.subtitles.push(fileName)
+      }
     }
-    sd.subtitles.push(subtitleRelativePath)
   }
 
   return Array.from(subtitleDirs.values()).sort((a, b) =>
