@@ -9,7 +9,14 @@ export interface ISubtitlesDir {
 }
 
 export interface ISubtitlesRepo extends IRepo {
-  /** Array of regular expressions to match the entries in the repository */
+  /**
+   * Array of patterns to specify where subtitle directories are located.
+   * Directories under an entry will be considered as subtitle directories.
+   *
+   * If not provided or empty, the root directory will be used.
+   *
+   * @default ['']
+   */
   entries?: Array<string | RegExp>
 }
 
