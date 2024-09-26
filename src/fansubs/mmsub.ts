@@ -9,6 +9,7 @@ export default {
       owner: 'DMYJS',
       name: 'MMSUB',
       branch: 'master',
+      entries: ['Animation/Movie', /(^Animation\/\d{4})/],
     },
   ],
   links: {
