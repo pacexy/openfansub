@@ -70,32 +70,32 @@ export function getSubtitleDirs(
     const match = matchingPattern.exec(item.path)
     if (!match || !match[1]) continue
 
-    const subtitlePath = match[1]
+    const subtitleRelativePath = match[1]
     const fullPath = item.path
 
     // Calculate the parent directory path
-    const parentPath = fullPath
-      .slice(0, -subtitlePath.length)
+    const dirPath = fullPath
+      .slice(0, -subtitleRelativePath.length)
       .replace(/\/$/, '')
 
     // Split the parent path into parts
-    const parts = parentPath.split('/')
+    const parts = dirPath.split('/')
 
     // Get the immediate directory name and its parent
     const dirName = parts.pop() || ''
-    const parent = parts.join('/')
+    const parentPath = parts.join('/')
 
-    let sd = subtitleDirs.get(parentPath)
+    let sd = subtitleDirs.get(dirPath)
     if (!sd) {
       sd = {
-        path: parentPath,
+        path: dirPath,
         name: dirName,
-        parent: parent || undefined,
+        parent: parentPath,
         subtitles: [],
       }
-      subtitleDirs.set(parentPath, sd)
+      subtitleDirs.set(dirPath, sd)
     }
-    sd.subtitles.push(subtitlePath)
+    sd.subtitles.push(subtitleRelativePath)
   }
 
   return Array.from(subtitleDirs.values()).sort((a, b) =>
