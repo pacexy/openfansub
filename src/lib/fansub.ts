@@ -67,7 +67,12 @@ export function getSubtitleDirs(
       typeof entry === 'string' ? entry : item.path.match(entry)![1]
 
     const restPath = item.path.slice(entryPath.length + 1)
-    const dirName = restPath.split('/')[0]
+    const parts = restPath.split('/')
+
+    // Skip if the path is not a directory
+    if (parts.length === 1) continue
+
+    const dirName = parts[0]
     const dirPath = entryPath + dirName
 
     if (!subtitleDirs.has(dirPath)) {
