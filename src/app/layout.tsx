@@ -1,8 +1,10 @@
 import './globals.css'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { Providers } from '~/app/components/providers'
+import { Search } from '~/app/components/search'
 import { TailwindIndicator } from '~/app/components/tailwind-indicator'
 import { Toaster } from '~/components/ui/sonner'
+import { fansubSlugs, importFansub } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
@@ -29,13 +31,23 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const fansubs = await Promise.all(fansubSlugs.map(importFansub))
+
   return (
     <html lang="en">
       <body className={cn('container font-sans', fontSans.variable)}>
         <Providers>
-          <header className="flex h-16 items-center justify-between">
+          <header className="flex h-16 items-center">
             <Link href="/">OpenFansub</Link>
             <Link href="/subtitles">Subtitles</Link>
+            <div className="ml-auto">
+              <Search
+                fansubs={fansubs.map((f) => ({
+                  slug: f.slug,
+                  name: f.name,
+                }))}
+              />
+            </div>
           </header>
           {children}
         </Providers>
