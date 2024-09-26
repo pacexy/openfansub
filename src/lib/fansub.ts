@@ -10,7 +10,7 @@ export interface ISubtitlesDir {
 
 export interface ISubtitlesRepo extends IRepo {
   /** Array of regular expressions to match the entries in the repository */
-  entries: RegExp[]
+  entries: string[]
 }
 
 export interface Fansub {
@@ -51,29 +51,25 @@ export interface Fansub {
 
 export function getSubtitleDirs(
   files: IRepoFile[],
-  entries: RegExp[],
+  entries: string[] = [''],
 ): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
     // Check if the file is in a subtitle entry directory
-    const entryMatch = entries.some((re) => re.test(item.path))
-    if (!entryMatch) continue
+    const entry = entries.find((entry) => item.path.startsWith(entry))
+    if (!entry) continue
 
-    const pathParts = item.path.split('/')
-    const animeName = pathParts.pop() || ''
-    const dirPath = pathParts.join('/')
+    const restPath = item.path.slice(entry.length + 1)
+    const dirName = restPath.split('/')[0]
+    const dirPath = entry + dirName
 
-    if (animeName) {
-      let sd = subtitleDirs.get(dirPath + '/' + animeName)
-      if (!sd) {
-        sd = {
-          path: dirPath + '/' + animeName,
-          name: animeName,
-          parent: dirPath,
-        }
-        subtitleDirs.set(dirPath + '/' + animeName, sd)
-      }
+    if (!subtitleDirs.has(dirPath)) {
+      subtitleDirs.set(dirPath, {
+        path: dirPath,
+        name: dirName,
+        parent: entry,
+      })
     }
   }
 

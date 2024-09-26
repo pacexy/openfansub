@@ -8,7 +8,7 @@ export default {
       owner: 'SweetSub',
       name: 'SweetSub',
       branch: 'master',
-      entries: [],
+      entries: ['Archive'],
     },
   ],
   links: {
