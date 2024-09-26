@@ -12,4 +12,7 @@ export default {
     },
   ],
   links: {},
+  subtitle: {
+    exts: [/\/(?<subtitle>(?:\d+\/)?[^/]+\.(?:ass|srt))$/],
+  },
 } satisfies Fansub

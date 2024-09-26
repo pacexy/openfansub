@@ -47,50 +47,44 @@ export interface Fansub {
   subtitle?: {
     /**
      * Array of file extensions or regular expressions to identify subtitle files
-     * @default ['.srt', '.ass']
      */
-    exts?: Array<string | RegExp>
+    exts?: Array<RegExp>
   }
 }
 
-const defaultSubtitleExts = ['.srt', '.ass']
+const defaultSubtitleExts = [/(?<subtitle>[^/]+\.(?:srt|ass))$/]
 
 export function getSubtitleDirs(
   files: IRepoFile[],
-  exts: Array<string | RegExp> = defaultSubtitleExts,
+  exts: Array<RegExp> = defaultSubtitleExts,
 ): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
-    if (
-      !exts.some((e) =>
-        typeof e === 'string' ? item.path.endsWith(e) : e.test(item.path),
-      )
-    ) {
-      continue
-    }
+    let match: RegExpExecArray | null = null
+    const matchingExt = exts.find((e) => (match = e.exec(item.path)) !== null)
+    if (!matchingExt || !match) continue
 
-    const parts = item.path.split('/')
-    const fileName = parts.pop()
-    const path = parts.join('/')
+    const subtitlePath = match.groups?.subtitle
+    if (!subtitlePath) continue
 
-    const dirName = parts.pop()
+    const fullPath = item.path
+    const parentPath = fullPath.slice(0, -subtitlePath.length - 1)
+    const parts = parentPath.split('/')
+    const dirName = parts.pop() || ''
     const parent = parts.join('/')
 
-    assert(fileName, 'fileName should not be empty')
-    assert(dirName, 'dirName should not be empty')
-
-    let sd = subtitleDirs.get(path)
+    let sd = subtitleDirs.get(parentPath)
     if (!sd) {
       sd = {
-        path,
+        path: parentPath,
         name: dirName,
-        parent,
+        parent: parent || undefined,
         subtitles: [],
       }
-      subtitleDirs.set(path, sd)
+      subtitleDirs.set(parentPath, sd)
     }
-    sd.subtitles.push(fileName)
+    sd.subtitles.push(subtitlePath)
   }
 
   return Array.from(subtitleDirs.values()).sort((a, b) =>
