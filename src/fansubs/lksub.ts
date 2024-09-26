@@ -13,6 +13,6 @@ export default {
   ],
   links: {},
   subtitle: {
-    patterns: [/\/(\d+\/[^/]+\.(?:ass|srt))$/, defaultSubtitlePattern],
+    patterns: [/\/(\d+\/[^/]+\.ass)$/, defaultSubtitlePattern],
   },
 } satisfies Fansub

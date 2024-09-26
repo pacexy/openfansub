@@ -47,12 +47,13 @@ export interface Fansub {
   subtitle?: {
     /**
      * Array of regular expressions to identify subtitle files
+     * @default [/\/([^/]+\.ass)$/]
      */
     patterns?: Array<RegExp>
   }
 }
 
-export const defaultSubtitlePattern = /([^/]+\.(?:srt|ass))$/
+export const defaultSubtitlePattern = /\/([^/]+\.ass)$/
 
 export function getSubtitleDirs(
   files: IRepoFile[],
