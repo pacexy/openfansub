@@ -29,13 +29,14 @@ export function Search({ fansubs }: { fansubs: SanitizedFansub[] }) {
         )}
       >
         {fansubs
-          .filter((fansub) => reg.test(fansub.name) || reg.test(fansub.slug))
-          .map((fansub) => (
-            <li key={fansub.name}>
+          .filter((f) => reg.test(f.name) || reg.test(f.slug))
+          .map((f) => (
+            <li key={f.name}>
               <a
                 className="text-foreground"
+                href={`/fansub/${f.slug}`}
                 dangerouslySetInnerHTML={{
-                  __html: `${fansub.name} ${fansub.slug}`.replace(
+                  __html: `${f.name} ${f.slug}`.replace(
                     reg,
                     (match) => `<mark>${match}</mark>`,
                   ),
