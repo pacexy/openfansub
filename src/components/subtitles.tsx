@@ -1,8 +1,8 @@
 import {
   getSubtitleDirs,
   importFansub,
-  type Fansub,
   type ISubtitlesDir,
+  type ISubtitlesRepo,
 } from '~/lib/fansub'
 import { fetchRepoFiles, type IRepo } from '~/lib/github'
 import { GoRepo } from 'react-icons/go'
@@ -12,15 +12,15 @@ export async function Subtitles({ slug }: { slug: string }) {
   return (
     <ul className="space-y-4">
       {fansub.repos.map((repo) => (
-        <Repo key={repo.name} repo={repo} fansub={fansub} />
+        <Repo key={repo.name} repo={repo} />
       ))}
     </ul>
   )
 }
 
-async function Repo({ repo, fansub }: { repo: IRepo; fansub: Fansub }) {
+async function Repo({ repo }: { repo: ISubtitlesRepo }) {
   const { files } = await fetchRepoFiles(repo)
-  const subtitleDirs = getSubtitleDirs(files, fansub.subtitle?.patterns)
+  const subtitleDirs = getSubtitleDirs(files, repo.entries)
   return (
     <li>
       <h3 className="mb-2 flex items-center text-sm text-muted-foreground">

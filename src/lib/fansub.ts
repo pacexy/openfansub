@@ -8,6 +8,11 @@ export interface ISubtitlesDir {
   parent?: string
 }
 
+export interface ISubtitlesRepo extends IRepo {
+  /** Array of regular expressions to match the entries in the repository */
+  entries: RegExp[]
+}
+
 export interface Fansub {
   /** Unique identifier for the fansub */
   slug: string
@@ -20,7 +25,7 @@ export interface Fansub {
   /** URL of the fansub's avatar */
   avatar?: string
   /** Array of GitHub repositories associated with the fansub */
-  repos: IRepo[]
+  repos: ISubtitlesRepo[]
   /** Various social media and contact links for the fansub */
   links: {
     /** Official website URL */
@@ -41,13 +46,6 @@ export interface Fansub {
     email?: string
     /** Sponsorship or donation URL */
     sponsor?: string
-  }
-  /** Configuration for subtitle directory handling */
-  subtitle?: {
-    /**
-     * Array of regular expressions to identify subtitle entry directories
-     */
-    entries: RegExp[]
   }
 }
 
