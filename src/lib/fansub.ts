@@ -52,7 +52,7 @@ export interface Fansub {
   }
 }
 
-const defaultSubtitleExts = [/(?<subtitle>[^/]+\.(?:srt|ass))$/]
+const defaultSubtitleExts = [/([^/]+\.(?:srt|ass))$/]
 
 export function getSubtitleDirs(
   files: IRepoFile[],
@@ -65,7 +65,7 @@ export function getSubtitleDirs(
     const matchingExt = exts.find((e) => (match = e.exec(item.path)) !== null)
     if (!matchingExt || !match) continue
 
-    const subtitlePath = match.groups?.subtitle
+    const subtitlePath = match[1]
     if (!subtitlePath) continue
 
     const fullPath = item.path
