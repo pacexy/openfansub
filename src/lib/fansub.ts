@@ -1,5 +1,5 @@
 import { readdir } from 'node:fs/promises'
-import { join } from 'node:path'
+import path from 'node:path'
 import { type IRepo, type IRepoFile } from './github'
 
 export interface IAnimeDir {
@@ -60,14 +60,21 @@ export function getAnimeDirs(
   files: IRepoFile[],
   entries: ISubtitlesRepo['entries'] = [''],
 ): IAnimeDir[] {
-  const animeDirs: Map<string, IAnimeDir> = new Map()
+  const animeDirs: IAnimeDir[] = []
 
   for (const item of files) {
+    const last = animeDirs[animeDirs.length - 1]
+
+    // Skip if the anime dir is already in the list
+    if (last && item.path.startsWith(last.path)) continue
+
     const entry = entries.find((entry) =>
       typeof entry === 'string'
         ? item.path.startsWith(entry)
         : entry.test(item.path),
     )
+
+    // Skip if the file is not in any entry
     if (entry === undefined) continue
 
     const entryPath =
@@ -80,20 +87,16 @@ export function getAnimeDirs(
     if (parts.length === 1) continue
 
     const dirName = parts[0]
-    const dirPath = join(entryPath, dirName)
+    const dirPath = path.posix.join(entryPath, dirName)
 
-    if (!animeDirs.has(dirPath)) {
-      animeDirs.set(dirPath, {
-        path: dirPath,
-        name: dirName,
-        parent: entryPath,
-      })
-    }
+    animeDirs.push({
+      path: dirPath,
+      name: dirName,
+      parent: entryPath,
+    })
   }
 
-  return Array.from(animeDirs.values()).sort((a, b) =>
-    a.path.localeCompare(b.path),
-  )
+  return animeDirs
 }
 
 export async function importFansub(slug: string) {
