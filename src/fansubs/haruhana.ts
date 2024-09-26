@@ -21,7 +21,4 @@ export default {
     qq: 'https://qm.qq.com/q/LFOmKxHXsm',
     email: 'mailto:mharuhanasub@gmail.com',
   },
-  subtitle: {
-    patterns: [/\/([^/]+\[Subtitles\]\.7z)$/],
-  },
 } satisfies Fansub
