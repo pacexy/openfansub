@@ -22,6 +22,6 @@ export default {
     email: 'mailto:mharuhanasub@gmail.com',
   },
   subtitle: {
-    exts: [/\[Subtitles\]\.7z$/],
+    patterns: [/\/([^/]+\[Subtitles\]\.7z)$/],
   },
 } satisfies Fansub

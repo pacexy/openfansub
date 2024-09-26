@@ -46,51 +46,56 @@ export interface Fansub {
   /** Configuration for subtitle file handling */
   subtitle?: {
     /**
-     * Array of file extensions or regular expressions to identify subtitle files
-     * @default ['.srt', '.ass']
+     * Array of regular expressions to identify subtitle files
+     * @default [/\/([^/]+\.ass)$/]
      */
-    exts?: Array<string | RegExp>
+    patterns?: Array<RegExp>
   }
 }
 
-const defaultSubtitleExts = ['.srt', '.ass']
+export const defaultSubtitlePattern = /\/([^/]+\.ass)$/
 
 export function getSubtitleDirs(
   files: IRepoFile[],
-  exts: Array<string | RegExp> = defaultSubtitleExts,
+  patterns: Array<RegExp> = [defaultSubtitlePattern],
 ): ISubtitlesDir[] {
   const subtitleDirs: Map<string, ISubtitlesDir> = new Map()
 
   for (const item of files) {
-    if (
-      !exts.some((e) =>
-        typeof e === 'string' ? item.path.endsWith(e) : e.test(item.path),
-      )
-    ) {
-      continue
-    }
+    // Find the first matching pattern regex
+    const matchingPattern = patterns.find((regex) => regex.test(item.path))
+    if (!matchingPattern) continue
 
-    const parts = item.path.split('/')
-    const fileName = parts.pop()
-    const path = parts.join('/')
+    // Extract the subtitle path using the matching regex
+    const match = matchingPattern.exec(item.path)
+    if (!match || !match[1]) continue
 
-    const dirName = parts.pop()
-    const parent = parts.join('/')
+    const subtitleRelativePath = match[1]
+    const fullPath = item.path
 
-    assert(fileName, 'fileName should not be empty')
-    assert(dirName, 'dirName should not be empty')
+    // Calculate the parent directory path
+    const dirPath = fullPath
+      .slice(0, -subtitleRelativePath.length)
+      .replace(/\/$/, '')
 
-    let sd = subtitleDirs.get(path)
+    // Split the parent path into parts
+    const parts = dirPath.split('/')
+
+    // Get the immediate directory name and its parent
+    const dirName = parts.pop() || ''
+    const parentPath = parts.join('/')
+
+    let sd = subtitleDirs.get(dirPath)
     if (!sd) {
       sd = {
-        path,
+        path: dirPath,
         name: dirName,
-        parent,
+        parent: parentPath,
         subtitles: [],
       }
-      subtitleDirs.set(path, sd)
+      subtitleDirs.set(dirPath, sd)
     }
-    sd.subtitles.push(fileName)
+    sd.subtitles.push(subtitleRelativePath)
   }
 
   return Array.from(subtitleDirs.values()).sort((a, b) =>
