@@ -37,7 +37,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={cn('container font-sans', fontSans.variable)}>
         <Providers>
-          <header className="flex h-16 items-center">
+          <header className="flex h-16 items-center gap-2">
             <Link href="/">OpenFansub</Link>
             <Link href="/subtitles">Subtitles</Link>
             <div className="ml-auto">

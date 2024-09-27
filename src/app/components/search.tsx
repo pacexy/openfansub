@@ -24,7 +24,7 @@ export function Search({ fansubs }: { fansubs: SanitizedFansub[] }) {
         // this ensures the list remains visible when clicked.
         tabIndex={0}
         className={cn(
-          'absolute right-0 mt-4 h-80 w-96 space-y-1 overflow-auto border bg-card px-2 py-1',
+          'absolute right-0 mt-4 max-h-80 w-72 space-y-1 overflow-auto border bg-card px-2 py-1',
           'hidden',
         )}
       >
