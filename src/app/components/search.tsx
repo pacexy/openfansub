@@ -36,9 +36,11 @@ export function Search({ fansubs }: { fansubs: SanitizedFansub[] }) {
                 className="text-foreground"
                 href={`/fansub/${f.slug}`}
                 dangerouslySetInnerHTML={{
-                  __html: `${f.name} ${f.slug}`.replace(
+                  // TODO: do not replace if no input
+                  __html: `${f.name}
+                    <span class="text-muted-foreground">${f.slug}</span>`.replace(
                     reg,
-                    (match) => `<mark>${match}</mark>`,
+                    (match) => match && `<mark>${match}</mark>`,
                   ),
                 }}
               ></a>
