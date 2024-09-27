@@ -5,9 +5,11 @@ import type { Fansub } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import { useState } from 'react'
 
-type SanitizedFansub = Pick<Fansub, 'slug' | 'name'>
+// So we can serialize the fansub data to be sent from
+// the server to the client.
+type SerializableFansub = Pick<Fansub, 'slug' | 'name'>
 
-export function Search({ fansubs }: { fansubs: SanitizedFansub[] }) {
+export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
   const [keyword, setKeyword] = useState('')
   const reg = new RegExp(keyword, 'ig')
 
