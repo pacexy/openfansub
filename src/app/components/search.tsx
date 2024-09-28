@@ -4,6 +4,7 @@ import { Input } from '~/components/ui/input'
 import type { Fansub } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import { useState } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 
 // So we can serialize the fansub data to be sent from
 // the server to the client.
@@ -39,11 +40,14 @@ export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
                 href={`/fansub/${f.slug}`}
                 dangerouslySetInnerHTML={{
                   // TODO: do not replace if no input
-                  __html: `${f.name}
-                    <span class="text-muted-foreground">${f.slug}</span>`.replace(
-                    reg,
-                    (match) => match && `<mark>${match}</mark>`,
-                  ),
+                  __html: renderToStaticMarkup(
+                    <>
+                      <span>{f.name}</span>
+                      <span className="bg-muted px-1 text-muted-foreground">
+                        {f.slug}
+                      </span>
+                    </>,
+                  ).replace(reg, (match) => match && `<mark>${match}</mark>`),
                 }}
               ></a>
             </li>
