@@ -14,8 +14,8 @@ export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
   const reg = new RegExp(keyword, 'ig')
 
   const highlight = (text: string) => {
-    // TODO: do not replace if no input
-    return text.replace(reg, (match) => match && `<mark>${match}</mark>`)
+    if (!keyword) return text
+    return text.replace(reg, (match) => `<mark>${match}</mark>`)
   }
 
   return (
@@ -32,7 +32,7 @@ export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
         tabIndex={0}
         className={cn(
           'absolute right-0 mt-4 max-h-80 w-72 space-y-1 overflow-auto border bg-card px-2 py-1',
-          'hidden',
+          // 'hidden',
         )}
       >
         {fansubs
