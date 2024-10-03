@@ -31,8 +31,8 @@ export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
         // this ensures the list remains visible when clicked.
         tabIndex={0}
         className={cn(
-          'absolute right-0 mt-4 max-h-80 w-72 space-y-1 overflow-auto border bg-card px-2 py-1',
-          // 'hidden',
+          'absolute right-0 mt-4 max-h-80 w-max space-y-1 overflow-auto border bg-card px-2 py-1',
+          'hidden',
         )}
       >
         {fansubs
@@ -44,7 +44,7 @@ export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
                   dangerouslySetInnerHTML={{ __html: highlight(f.name) }}
                 ></span>
                 <span
-                  className="bg-muted px-1 text-muted-foreground"
+                  className="ml-1 bg-muted px-1 text-muted-foreground"
                   dangerouslySetInnerHTML={{ __html: highlight(f.slug) }}
                 ></span>
               </a>
