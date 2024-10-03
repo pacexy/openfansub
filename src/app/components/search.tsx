@@ -4,7 +4,6 @@ import { Input } from '~/components/ui/input'
 import type { Fansub } from '~/lib/fansub'
 import { cn } from '~/lib/utils'
 import { useState } from 'react'
-import { renderToStaticMarkup } from 'react-dom/server'
 
 // So we can serialize the fansub data to be sent from
 // the server to the client.
@@ -13,6 +12,11 @@ type SerializableFansub = Pick<Fansub, 'slug' | 'name'>
 export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
   const [keyword, setKeyword] = useState('')
   const reg = new RegExp(keyword, 'ig')
+
+  const highlight = (text: string) => {
+    // TODO: do not replace if no input
+    return text.replace(reg, (match) => match && `<mark>${match}</mark>`)
+  }
 
   return (
     <div className="relative [&_ul]:focus-within:block">
@@ -35,21 +39,15 @@ export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
           .filter((f) => reg.test(f.name) || reg.test(f.slug))
           .map((f) => (
             <li key={f.name}>
-              <a
-                className="text-foreground"
-                href={`/fansub/${f.slug}`}
-                dangerouslySetInnerHTML={{
-                  // TODO: do not replace if no input
-                  __html: renderToStaticMarkup(
-                    <>
-                      <span>{f.name}</span>
-                      <span className="bg-muted px-1 text-muted-foreground">
-                        {f.slug}
-                      </span>
-                    </>,
-                  ).replace(reg, (match) => match && `<mark>${match}</mark>`),
-                }}
-              ></a>
+              <a className="text-foreground" href={`/fansub/${f.slug}`}>
+                <span
+                  dangerouslySetInnerHTML={{ __html: highlight(f.name) }}
+                ></span>
+                <span
+                  className="bg-muted px-1 text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: highlight(f.slug) }}
+                ></span>
+              </a>
             </li>
           ))}
       </ul>
