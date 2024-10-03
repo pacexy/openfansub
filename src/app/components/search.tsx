@@ -39,8 +39,9 @@ export function Search({ fansubs }: { fansubs: SerializableFansub[] }) {
           .filter((f) => reg.test(f.name) || reg.test(f.slug))
           .map((f) => (
             <li key={f.name}>
-              <a className="text-foreground" href={`/fansub/${f.slug}`}>
+              <a href={`/fansub/${f.slug}`}>
                 <span
+                  className="text-foreground"
                   dangerouslySetInnerHTML={{ __html: highlight(f.name) }}
                 ></span>
                 <span
